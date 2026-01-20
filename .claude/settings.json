@@ -1,0 +1,47 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(TZ=Asia/Tokyo date:*)",
+      "Bash(cd:*)",
+      "Bash(ls:*)",
+      "Bash(pwd:*)",
+      "Bash(which:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(echo:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git branch:*)",
+      "Read",
+      "WebSearch",
+      "WebFetch"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay ~/.claude/sounds/complete.wav"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay ~/.claude/sounds/confirm.wav"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -66,9 +66,23 @@ ln -sf "$DOTFILES_DIR/.config/starship.toml" ~/.config/starship.toml
 
 # nvimはディレクトリ全体をシンボリックリンク
 if [ -d ~/.config/nvim ] && [ ! -L ~/.config/nvim ]; then
-    echo "Backing up existing nvim config to ~/.config/nvim.bak"
-    mv ~/.config/nvim ~/.config/nvim.bak
+    rm -rf ~/.config/nvim
 fi
 ln -sfn "$DOTFILES_DIR/.config/nvim" ~/.config/nvim
+
+# Claude Code設定（ファイル単位でリンク、他のファイルは残す）
+mkdir -p ~/.claude/sounds
+ln -sf "$DOTFILES_DIR/.claude/CLAUDE.md" ~/.claude/CLAUDE.md
+ln -sf "$DOTFILES_DIR/.claude/settings.json" ~/.claude/settings.json
+ln -sf "$DOTFILES_DIR/.claude/statusline.sh" ~/.claude/statusline.sh
+
+# skillsはディレクトリ全体をシンボリックリンク
+if [ -d ~/.claude/skills ] && [ ! -L ~/.claude/skills ]; then
+    rm -rf ~/.claude/skills
+fi
+ln -sfn "$DOTFILES_DIR/.claude/skills" ~/.claude/skills
+
+ln -sf "$DOTFILES_DIR/.claude/sounds/complete.wav" ~/.claude/sounds/complete.wav
+ln -sf "$DOTFILES_DIR/.claude/sounds/confirm.wav" ~/.claude/sounds/confirm.wav
 
 echo "Setup complete! Run 'source ~/.zshrc' to apply changes."
