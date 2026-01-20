@@ -16,6 +16,8 @@
 | `.config/mise/config.toml`    | mise設定（グローバルPythonバージョン）|
 | `.config/uv/uv.toml`          | uv設定                               |
 | `.config/uv/uv-tools.txt`     | uvでインストールするツール           |
+| `.config/zellij/config.kdl`   | zellij設定                           |
+| `.config/zellij/layouts/default.kdl` | zellijレイアウト              |
 
 ## セットアップ
 

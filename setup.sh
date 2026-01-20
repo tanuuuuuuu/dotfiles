@@ -55,4 +55,8 @@ ln -sf "$DOTFILES_DIR/.config/mise/config.toml" ~/.config/mise/config.toml
 mkdir -p ~/.config/uv
 ln -sf "$DOTFILES_DIR/.config/uv/uv.toml" ~/.config/uv/uv.toml
 
+mkdir -p ~/.config/zellij/layouts
+ln -sf "$DOTFILES_DIR/.config/zellij/config.kdl" ~/.config/zellij/config.kdl
+ln -sf "$DOTFILES_DIR/.config/zellij/layouts/default.kdl" ~/.config/zellij/layouts/default.kdl
+
 echo "Setup complete! Run 'source ~/.zshrc' to apply changes."
