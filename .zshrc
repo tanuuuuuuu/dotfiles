@@ -1,22 +1,33 @@
 # ==================================================
-# Python環境（uv）
+# mise（グローバル Python）
+# ==================================================
+eval "$(mise activate zsh)"
+
+# ==================================================
+# uv（グローバル CLI ツール）
 # ==================================================
 export PATH="$HOME/.local/bin:$PATH"
 
 # ==================================================
 # Google Cloud SDK
 # ==================================================
-if [ -f '/Users/tanu/google-cloud-sdk/path.zsh.inc' ]; then
-  . '/Users/tanu/google-cloud-sdk/path.zsh.inc'
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then
+  . "$HOME/google-cloud-sdk/path.zsh.inc"
 fi
-if [ -f '/Users/tanu/google-cloud-sdk/completion.zsh.inc' ]; then
-  . '/Users/tanu/google-cloud-sdk/completion.zsh.inc'
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then
+  . "$HOME/google-cloud-sdk/completion.zsh.inc"
 fi
 
 # ==================================================
 # プラグイン
 # ==================================================
+# コマンド入力時に履歴から補完候補を表示
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# ファジーファインダー（Ctrl+Rで履歴検索など）
+source $(brew --prefix)/opt/fzf/shell/completion.zsh
+source $(brew --prefix)/opt/fzf/shell/key-bindings.zsh
+# ターミナル起動時に入力メソッドを英数に切り替え
+macism com.google.inputmethod.Japanese.Roman
 
 # ==================================================
 # プロンプト（Starship）
@@ -34,18 +45,14 @@ setopt hist_ignore_all_dups
 setopt hist_reduce_blanks
 setopt correct
 
-macism com.google.inputmethod.Japanese.Roman
-
 # ==================================================
 # エイリアス
 # ==================================================
 alias vim='nvim'
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 # ==================================================
 # Zellij自動起動（Ghostty使用時のみ）
 # ==================================================
 if [[ "$TERM" == "xterm-ghostty" ]] && [[ -z "$ZELLIJ" ]]; then
-    zellij
+  zellij
 fi
