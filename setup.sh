@@ -62,4 +62,11 @@ ln -sf "$DOTFILES_DIR/.config/zellij/layouts/default.kdl" ~/.config/zellij/layou
 mkdir -p ~/.config/ghostty
 ln -sf "$DOTFILES_DIR/.config/ghostty/config" ~/.config/ghostty/config
 
+# nvimはディレクトリ全体をシンボリックリンク
+if [ -d ~/.config/nvim ] && [ ! -L ~/.config/nvim ]; then
+    echo "Backing up existing nvim config to ~/.config/nvim.bak"
+    mv ~/.config/nvim ~/.config/nvim.bak
+fi
+ln -sfn "$DOTFILES_DIR/.config/nvim" ~/.config/nvim
+
 echo "Setup complete! Run 'source ~/.zshrc' to apply changes."
