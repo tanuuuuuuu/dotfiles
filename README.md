@@ -7,27 +7,35 @@
 - OS: macOS（Intel / Apple Silicon どちらも対応）
 - シェル: zsh
 
-## 含まれる設定
+## ディレクトリ構造
 
-| ファイル                             | 説明                                   |
-| ------------------------------------ | -------------------------------------- |
-| `.zshrc`                             | シェル設定                             |
-| `Brewfile`                           | Homebrewでインストールするパッケージ   |
-| `.config/mise/config.toml`           | mise設定（グローバルPythonバージョン） |
-| `.config/uv/uv.toml`                 | uv設定                                 |
-| `.config/uv/uv-tools.txt`            | uvでインストールするツール             |
-| `.config/zellij/config.kdl`          | Zellij設定                             |
-| `.config/zellij/layouts/default.kdl` | Zellijレイアウト                       |
-| `.config/ghostty/config`             | Ghostty設定                            |
-| `.config/starship.toml`              | Starshipプロンプト設定                 |
-| `.config/nvim/`                      | Neovim設定                             |
-| `.claude/CLAUDE.md`                  | Claude Codeカスタム指示                |
-| `.claude/settings.json`              | Claude Code設定                        |
-| `.claude/skills/`                    | Claude Codeスキル                      |
-| `.claude/sounds/`                    | Claude Code通知音                      |
-| `.claude/statusline.sh`              | Claude Codeステータスライン            |
+```
+.
+├── .zshrc                  # シェル設定
+├── Brewfile                # Homebrewパッケージ
+├── setup.sh                # セットアップスクリプト
+│
+├── .config/
+│   ├── ghostty/config      # Ghostty設定
+│   ├── mise/config.toml    # mise（グローバルPython）
+│   ├── nvim/               # Neovim設定
+│   ├── starship.toml       # Starshipプロンプト設定
+│   ├── uv/
+│   │   ├── uv.toml         # uv設定
+│   │   └── uv-tools.txt    # uvでインストールするCLIツール
+│   └── zellij/
+│       ├── config.kdl      # Zellij設定
+│       └── layouts/        # Zellijレイアウト
+│
+└── .claude/                # Claude Code設定（ユーザーレベル）
+    ├── CLAUDE.md           # カスタム指示
+    ├── settings.json       # 設定
+    ├── skills/             # Agents Skills
+    ├── sounds/             # 通知音
+    └── statusline.sh       # ステータスライン
+```
 
-※ `.claude/` 以下はユーザーレベル設定（`~/.claude/`）。このため dotfiles プロジェクト固有の Claude Code 設定は作成できない。必要になった場合は構造の見直しが必要。
+`.claude/` は `~/.claude/` にリンクされるユーザーレベル設定。このため dotfiles プロジェクト固有の Claude Code 設定は作成できない（必要になった場合は構造の見直しが必要）。
 
 ## セットアップ
 
