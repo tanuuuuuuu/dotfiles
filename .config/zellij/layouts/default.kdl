@@ -8,16 +8,28 @@ layout {
             plugin location="status-bar"
         }
     }
-    tab name="Obsidian（Zettelkasten）" {
+
+    // 開発用3ペインレイアウト: Vim + Terminal + Claude Code
+    pane_template name="dev-layout" {
         pane split_direction="vertical" {
             pane size="55%" split_direction="horizontal" {
-                pane size="80%" cwd="~/Documents/zettelkasten" name="Vim" command="nvim"
-                pane size="20%" cwd="~/Documents/zettelkasten" name="Terminal"
+                pane size="80%" name="Vim" command="nvim"
+                pane size="20%" name="Terminal"
             }
-            pane size="45%" cwd="~/Documents/zettelkasten" name="Claude Code" command="claude" focus=true
+            pane size="45%" name="Claude Code" command="claude" focus=true
         }
     }
-    tab {
+
+    tab name="Zettelkasten" cwd="~/Documents/zettelkasten" {
+        dev-layout
+    }
+    tab name="dotfiles" cwd="~/dotfiles" {
+        dev-layout
+    }
+    tab name="Polaris" cwd="~/Documents/polaris" {
+        dev-layout
+    }
+    tab name="_blank" {
         pane cwd="~"
     }
 }
