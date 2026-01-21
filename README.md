@@ -55,4 +55,5 @@ source ~/.zshrc
 3. mise で Python をインストール
 4. uv をインストール
 5. `.config/uv/uv-tools.txt` に記載されたツールをインストール
-6. シンボリックリンクを作成（`.zshrc`, `.config/`, `.claude/`）
+6. Claude Code をインストール（未インストールの場合）
+7. シンボリックリンクを作成（`.zshrc`, `.config/`, `.claude/`）
