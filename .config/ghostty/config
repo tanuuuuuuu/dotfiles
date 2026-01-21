@@ -49,6 +49,9 @@ cursor-style-blink = false
 # フォント
 # ==================================================
 
+# フォントファミリー（日本語対応の等幅フォント）
+font-family = HackGen35 Console
+
 # サイズ（ポイント）
 font-size = 14
 
