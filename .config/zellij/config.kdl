@@ -180,9 +180,6 @@ keybinds clear-defaults=true {
     shared_except "locked" "move" {
         bind "Ctrl h" { SwitchToMode "move"; }
     }
-    shared_except "locked" "session" {
-        bind "Ctrl o" { SwitchToMode "session"; }
-    }
     shared_except "locked" "scroll" "search" "tmux" {
         bind "Ctrl b" { SwitchToMode "tmux"; }
     }
