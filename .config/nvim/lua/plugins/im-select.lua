@@ -2,7 +2,7 @@ return {
   "keaising/im-select.nvim",
   event = "VeryLazy",
   opts = {
-    default_im_select = "com.google.inputmethod.Japanese.Roman",
+    default_im_select = "com.apple.keylayout.ABC",
     default_command = "macism",
     set_default_events = { "InsertLeave", "FocusGained" },
     set_previous_events = {},

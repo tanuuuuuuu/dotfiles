@@ -27,7 +27,7 @@ source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $(brew --prefix)/opt/fzf/shell/completion.zsh
 source $(brew --prefix)/opt/fzf/shell/key-bindings.zsh
 # ターミナル起動時に入力メソッドを英数に切り替え
-macism com.google.inputmethod.Japanese.Roman
+macism com.apple.keylayout.ABC
 
 # ==================================================
 # プロンプト（Starship）
