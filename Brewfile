@@ -11,3 +11,4 @@ brew "zsh-autosuggestions"
 
 cask "font-hackgen"
 cask "ghostty"
+cask "google-japanese-ime"
