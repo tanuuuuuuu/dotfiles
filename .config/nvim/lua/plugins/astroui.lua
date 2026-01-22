@@ -25,6 +25,11 @@ return {
         SpecialKey = { bg = "NONE" },
         VertSplit = { bg = "NONE" },
         WinSeparator = { bg = "NONE" },
+        -- Neo-tree
+        NeoTreeNormal = { bg = "NONE" },
+        NeoTreeNormalNC = { bg = "NONE" },
+        NeoTreeEndOfBuffer = { bg = "NONE" },
+        NeoTreeWinSeparator = { bg = "NONE" },
       },
       astrodark = { -- a table of overrides/changes when applying the astrotheme theme
         -- Normal = { bg = "#000000" },
