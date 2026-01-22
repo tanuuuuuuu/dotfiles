@@ -32,7 +32,9 @@
 └── .claude/                 # Claude Code設定（ユーザーレベル）
     ├── CLAUDE.md            # カスタム指示
     ├── settings.json        # 設定
-    ├── skills/              # Agents Skills
+    ├── skills/
+    │   ├── claude-md/       # CLAUDE.md作成・改善スキル
+    │   └── skill-creator/   # スキル作成ガイド（Anthropic公式）
     ├── sounds/              # 通知音
     └── statusline.sh        # ステータスライン
 ```
@@ -60,11 +62,8 @@ source ~/.zshrc
 
 ## 手動でインストールするアプリ
 
-Homebrew で管理できないアプリや sudo が必要なものは手動インストールする。
+Homebrew で管理できないアプリ。
 
-| アプリ | 入手先 | 説明 | インストール |
-|--------|--------|------|--------------|
-| DisplayLink Manager | [公式サイト](https://www.synaptics.com/products/displaylink-graphics/downloads/macos) | USB外部ディスプレイ用ドライバ | `brew install --cask displaylink` |
-| Google 日本語入力 | [公式サイト](https://www.google.co.jp/ime/) | 日本語入力システム | `brew install --cask google-japanese-ime` |
-| RunCat | [App Store](https://apps.apple.com/jp/app/runcat/id1429033973) | メニューバーでCPU使用率を表示 | - |
-| Tailscale | [公式サイト](https://tailscale.com/) | メッシュVPN | `brew install --cask tailscale-app` |
+| アプリ | 入手先 | 説明 |
+|--------|--------|------|
+| RunCat | [App Store](https://apps.apple.com/jp/app/runcat/id1429033973) | メニューバーでCPU使用率を表示 |
