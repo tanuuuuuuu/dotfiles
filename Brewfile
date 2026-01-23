@@ -1,7 +1,7 @@
-tap "laishulu/macism"
+tap "laishulu/homebrew"
 
 brew "fzf"
-brew "macism"      # IME切り替え（Neovim用）
+brew "laishulu/homebrew/macism"  # IME切り替え（Neovim用）
 brew "mise"
 brew "neovim"
 brew "starship"
