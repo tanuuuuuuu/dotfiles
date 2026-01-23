@@ -56,6 +56,7 @@ fi
 # ==================================================
 # 設定ファイル（シンボリックリンク）
 # ==================================================
+ln -sf "$DOTFILES_DIR/.zprofile" ~/.zprofile
 ln -sf "$DOTFILES_DIR/.zshrc" ~/.zshrc
 
 mkdir -p ~/.config/mise

@@ -21,6 +21,7 @@
 
 ```
 .
+├── .zprofile                # ログインシェル設定（Homebrewパス）
 ├── .zshrc                   # シェル設定
 ├── Brewfile                 # Homebrewパッケージ
 ├── setup.sh                 # セットアップスクリプト
@@ -69,7 +70,7 @@ source ~/.zshrc
 4. uv をインストール
 5. `.config/uv/uv-tools.txt` に記載されたツールをインストール
 6. Claude Code をインストール（未インストールの場合）
-7. シンボリックリンクを作成（`.zshrc`, `.config/`, `.claude/`）
+7. シンボリックリンクを作成（`.zprofile`, `.zshrc`, `.config/`, `.claude/`）
 
 ## macOS システム設定
 
