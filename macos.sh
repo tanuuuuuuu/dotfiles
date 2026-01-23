@@ -80,6 +80,9 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 15
 # 長押しで特殊文字ではなくキーリピート
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
+# F1、F2などを標準のファンクションキーとして使用
+defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
+
 # ==================================================
 # Text Input
 # ==================================================
