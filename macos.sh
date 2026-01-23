@@ -71,11 +71,11 @@ defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Down
 # Keyboard
 # ==================================================
 
-# キーリピートを速く (システム環境設定の最速は2、1は超速)
-defaults write NSGlobalDomain KeyRepeat -int 1
+# キーリピートを速く (システム環境設定の最速は2)
+defaults write NSGlobalDomain KeyRepeat -int 2
 
-# キーリピート開始までの時間を短く (システム環境設定の最速は15、10は超速)
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
+# キーリピート開始までの時間を短く (システム環境設定の最速は15)
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
 # 長押しで特殊文字ではなくキーリピート
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
