@@ -18,8 +18,8 @@ macOS 用の個人設定ファイル管理リポジトリ。
 
 ## 構造
 
-- `.zprofile` - ログインシェル設定（Homebrew パス）
-- `.zshrc` - シェル設定
+- `.zprofile` - ログインシェル設定
+- `.zshrc` - インタラクティブシェル設定
 - `Brewfile` - Homebrew パッケージ一覧
 - `.config/` - 各種ツールの設定
 - `.claude/` - Claude Code の設定

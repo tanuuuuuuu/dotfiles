@@ -21,8 +21,8 @@
 
 ```
 .
-├── .zprofile                # ログインシェル設定（Homebrewパス）
-├── .zshrc                   # シェル設定
+├── .zprofile                # ログインシェル設定
+├── .zshrc                   # インタラクティブシェル設定
 ├── Brewfile                 # Homebrewパッケージ
 ├── setup.sh                 # セットアップスクリプト
 ├── macos.sh                 # macOS システム設定
