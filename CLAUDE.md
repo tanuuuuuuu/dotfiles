@@ -22,7 +22,7 @@ macOS 用の個人設定ファイル管理リポジトリ。
 - `.zshrc` - インタラクティブシェル設定
 - `Brewfile` - Homebrew パッケージ一覧
 - `.config/` - 各種ツールの設定
-- `.claude/` - Claude Code の設定
+- `.claude/` - Claude Code の設定（スキル含む）
 - `setup.sh` - 初期セットアップスクリプト
 - `macos.sh` - macOS システム設定（defaults コマンド）
 

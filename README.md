@@ -49,9 +49,13 @@
     ├── CLAUDE.md            # カスタム指示
     ├── settings.json        # 設定
     ├── skills/
+    │   ├── canvas-design/   # ビジュアルデザイン・アート作成（Anthropic公式）
     │   ├── claude-md/       # CLAUDE.md作成・改善スキル
+    │   ├── doc-coauthoring/ # ドキュメント共同執筆ワークフロー（Anthropic公式）
     │   ├── git-cleanup/     # PRマージ後のブランチ整理
-    │   └── skill-creator/   # スキル作成ガイド（Anthropic公式）
+    │   ├── internal-comms/  # 社内コミュニケーション作成（Anthropic公式）
+    │   ├── skill-creator/   # スキル作成ガイド（Anthropic公式）
+    │   └── theme-factory/   # アーティファクトのテーマ適用（Anthropic公式）
     ├── sounds/              # 通知音
     └── statusline.sh        # ステータスライン
 ```
