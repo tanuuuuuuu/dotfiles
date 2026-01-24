@@ -39,6 +39,13 @@ defaults write com.apple.dock minimize-to-application -bool true
 defaults write com.apple.dock launchanim -bool false
 
 # ==================================================
+# Appearance
+# ==================================================
+
+# ダークモードを有効化
+defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
+
+# ==================================================
 # Finder
 # ==================================================
 
