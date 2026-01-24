@@ -1,5 +1,6 @@
 tap "laishulu/homebrew"
 
+brew "defaultbrowser"
 brew "fzf"
 brew "gh"
 brew "laishulu/homebrew/macism"  # IME切り替え（Neovim用）
