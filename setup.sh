@@ -54,6 +54,15 @@ if ! command -v claude &> /dev/null; then
 fi
 
 # ==================================================
+# Google Cloud SDK
+# ==================================================
+if ! command -v gcloud &> /dev/null; then
+    echo "Installing Google Cloud SDK..."
+    export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+    curl https://sdk.cloud.google.com | bash
+fi
+
+# ==================================================
 # 設定ファイル（シンボリックリンク）
 # ==================================================
 ln -sf "$DOTFILES_DIR/.zprofile" ~/.zprofile
