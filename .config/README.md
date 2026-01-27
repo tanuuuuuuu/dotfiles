@@ -17,7 +17,7 @@
 └── zellij/            # ターミナルマルチプレクサ
 ```
 
-## ghostty
+## Ghostty
 
 GPU ベースの高速ターミナルエミュレータ。macOS / Linux 対応。
 
@@ -49,13 +49,13 @@ GPU ベースの高速ターミナルエミュレータ。macOS / Linux 対応�
 |------|-----|
 | Python | 3.13 |
 
-## nvim
+## Neovim
 
 Vim ベースの高機能テキストエディタ。[AstroNvim](https://astronvim.com/) をベースにカスタマイズ。
 
 詳細は [nvim/README.md](nvim/README.md) を参照。
 
-## raycast
+## Raycast
 
 macOS 用ランチャーアプリ。Spotlight の高機能版で、カスタムスクリプトやワークフローを実行できる。
 
@@ -69,7 +69,7 @@ macOS 用ランチャーアプリ。Spotlight の高機能版で、カスタム�
 | `open-marimo.sh` | marimo（Python ノートブック）を起動 |
 | `zettel-id.sh` | Zettelkasten 用の ID を生成 |
 
-## starship
+## Starship
 
 シェルプロンプトのカスタマイズツール。Rust 製で高速。Git ブランチ、言語バージョンなどをプロンプトに表示できる。
 
@@ -87,7 +87,7 @@ macOS 用ランチャーアプリ。Spotlight の高機能版で、カスタム�
 |------|-----|------|
 | `python-preference` | `only-managed` | mise で管理された Python のみ使用 |
 
-## zellij
+## Zellij
 
 ターミナルマルチプレクサ。tmux の代替で、ペイン分割やセッション管理ができる。Rust 製でモダンな UI。
 
