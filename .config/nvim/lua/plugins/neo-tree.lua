@@ -1,6 +1,14 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
   opts = {
+    event_handlers = {
+      {
+        event = "vim_buffer_enter",
+        handler = function()
+          vim.cmd("Neotree refresh")
+        end,
+      },
+    },
     filesystem = {
       filtered_items = {
         visible = true,
