@@ -5,7 +5,10 @@ return {
       {
         event = "vim_buffer_enter",
         handler = function()
-          vim.cmd("Neotree refresh")
+          -- Neo-tree のバッファでは refresh しない（再帰防止）
+          if vim.bo.filetype ~= "neo-tree" then
+            pcall(vim.cmd, "Neotree refresh")
+          end
         end,
       },
     },
