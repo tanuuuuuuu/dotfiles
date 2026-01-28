@@ -1,17 +1,6 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
   opts = {
-    event_handlers = {
-      {
-        event = "vim_buffer_enter",
-        handler = function()
-          -- Neo-tree のバッファでは refresh しない（再帰防止）
-          if vim.bo.filetype ~= "neo-tree" then
-            pcall(vim.cmd, "Neotree refresh")
-          end
-        end,
-      },
-    },
     filesystem = {
       filtered_items = {
         visible = true,
@@ -28,6 +17,12 @@ return {
     vim.api.nvim_create_autocmd("VimEnter", {
       callback = function()
         vim.cmd("Neotree focus")
+      end,
+    })
+    -- Neovim にフォーカスが戻った時に Neo-tree をリフレッシュ
+    vim.api.nvim_create_autocmd("FocusGained", {
+      callback = function()
+        pcall(vim.cmd, "Neotree refresh")
       end,
     })
   end,
