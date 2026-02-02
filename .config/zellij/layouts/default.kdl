@@ -20,6 +20,9 @@ layout {
     tab name="Zettelkasten" cwd="~/repos/zettelkasten" {
         dev-layout
     }
+    tab name="Marp" cwd="~/repos/marp" {
+        dev-layout
+    }
     tab name="dotfiles" cwd="~/dotfiles" {
         dev-layout
     }
