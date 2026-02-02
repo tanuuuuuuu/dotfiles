@@ -96,6 +96,18 @@ defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
 # Command+Option+Space
 /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:65:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
 
+# CleanShot X を使うため、デフォルトのスクリーンショットショートカットを無効にする
+# Cmd+Shift+3: 画面のピクチャをファイルとして保存
+/usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:28:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+# Cmd+Ctrl+Shift+3: 画面のピクチャをクリップボードにコピー
+/usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:29:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+# Cmd+Shift+4: 選択部分のピクチャをファイルとして保存
+/usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:30:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+# Cmd+Ctrl+Shift+4: 選択部分のピクチャをクリップボードにコピー
+/usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:31:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+# Cmd+Shift+5: スクリーンショットと収録のオプション
+/usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:184:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+
 # ==================================================
 # Text Input
 # ==================================================
