@@ -17,6 +17,7 @@ Claude Code のユーザーレベル設定。`~/.claude/` にシンボリック�
     ├── claude-md/
     ├── doc-coauthoring/
     ├── git-cleanup/
+    ├── grok-search/
     ├── internal-comms/
     ├── quota/
     └── skill-creator/
@@ -49,6 +50,7 @@ Claude Code の動作設定。主な項目：
 | claude-md | CLAUDE.md の作成・改善支援 | 自作 |
 | [doc-coauthoring](https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring) | ドキュメント共同作成ワークフロー | Anthropic 公式 |
 | git-cleanup | マージ済みブランチの整理 | 自作 |
+| [grok-search](skills/grok-search/README.md) | Grok API で X の投稿を検索・要約 | 自作 |
 | [internal-comms](https://github.com/anthropics/skills/tree/main/skills/internal-comms) | 社内コミュニケーション文書の作成 | Anthropic 公式 |
 | quota | Claude Code の API 使用量クォータの確認 | 自作 |
 | [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) | スキルの作成ガイド | Anthropic 公式 |
