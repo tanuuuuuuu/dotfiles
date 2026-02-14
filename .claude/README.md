@@ -9,6 +9,8 @@ Claude Code のユーザーレベル設定。`~/.claude/` にシンボリック�
 ├── CLAUDE.md          # カスタム指示（プライベート）
 ├── settings.json      # Claude Code 設定
 ├── statusline.sh      # ステータスライン表示スクリプト
+├── scripts/           # ステータスライン等で使用するスクリプト
+│   └── fetch_usage.sh # API 使用量取得
 ├── sounds/            # 通知音
 │   ├── complete.wav   # タスク完了時
 │   └── confirm.wav    # 確認要求時
@@ -19,7 +21,6 @@ Claude Code のユーザーレベル設定。`~/.claude/` にシンボリック�
     ├── git-cleanup/
     ├── grok-search/
     ├── internal-comms/
-    ├── quota/
     └── skill-creator/
 ```
 
@@ -52,7 +53,6 @@ Claude Code の動作設定。主な項目：
 | git-cleanup | マージ済みブランチの整理 | 自作 |
 | [grok-search](skills/grok-search/README.md) | Grok API で X の投稿を検索・要約 | 自作 |
 | [internal-comms](https://github.com/anthropics/skills/tree/main/skills/internal-comms) | 社内コミュニケーション文書の作成 | Anthropic 公式 |
-| quota | Claude Code の API 使用量クォータの確認 | 自作 |
 | [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) | スキルの作成ガイド | Anthropic 公式 |
 
 ## カスタマイズ
