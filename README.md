@@ -3,6 +3,7 @@
 macOS 用の個人設定ファイル管理リポジトリ。
 
 ![開発環境](assets/dev-environment.png)
+*Ghostty + Zellij 上で AstroNvim と Claude Code を使った開発環境*
 
 シェル、エディタ、ターミナル等の設定をシンボリックリンクで管理する。`~/dotfiles/` に clone して使用。
 
