@@ -45,6 +45,8 @@
       "Bash(pwd:*)",
       "Bash(tree:*)",
       "Bash(TZ=Asia/Tokyo date:*)",
+      "Bash(bash ~/.claude/skills/grok-search/scripts/search.sh:*)",
+      "Bash(bash ~/.claude/skills/quota/scripts/fetch_usage.sh:*)",
       "Bash(wc:*)",
       "Bash(which:*)",
       "Read",

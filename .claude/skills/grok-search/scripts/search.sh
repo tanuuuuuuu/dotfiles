@@ -21,18 +21,10 @@ XAI_API_KEY=$(security find-generic-password -s "Grok-API-Key" -w 2>/dev/null) |
 # x_search ツール設定を構築
 X_SEARCH_TOOL='{"type": "x_search"}'
 if [ -n "$OPTIONS" ]; then
-    HANDLES=$(echo "$OPTIONS" | jq -r '.handles // empty')
-    FROM=$(echo "$OPTIONS" | jq -r '.from // empty')
-    TO=$(echo "$OPTIONS" | jq -r '.to // empty')
-
-    X_SEARCH_TOOL=$(jq -n \
-        --arg handles "$HANDLES" \
-        --arg from "$FROM" \
-        --arg to "$TO" \
-        '{type: "x_search"}
-        + (if $handles != "" then {allowed_x_handles: ($handles | split(","))} else {} end)
-        + (if $from != "" then {from_date: $from} else {} end)
-        + (if $to != "" then {to_date: $to} else {} end)')
+    X_SEARCH_TOOL=$(echo "$OPTIONS" | jq '{type: "x_search"}
+        + (if .handles then {allowed_x_handles: .handles} else {} end)
+        + (if .from then {from_date: .from} else {} end)
+        + (if .to then {to_date: .to} else {} end)')
 fi
 
 # API 呼び出し

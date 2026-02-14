@@ -1,7 +1,6 @@
 ---
 name: quota
 description: Claude の API 使用量クォータを確認。5時間・7日間ローリングウィンドウの使用率（%）とリセット時刻を表示。「/quota」「使用量」「クォータ」「残量」「あとどれくらい使える」で使用。
-allowed-tools: Bash(bash ~/.claude/skills/quota/scripts/fetch_usage.sh:*)
 ---
 
 # Quota

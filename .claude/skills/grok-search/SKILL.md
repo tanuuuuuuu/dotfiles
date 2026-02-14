@@ -1,12 +1,16 @@
 ---
 name: grok-search
 description: Grok API の x_search ツールで X (Twitter) の投稿を検索・要約。「/grok-search」「X を検索」「X の投稿を調べて」「Twitter で検索」「X でのトレンド」で使用。
-allowed-tools: Bash(bash ~/.claude/skills/grok-search/scripts/search.sh:*)
 ---
 
 # Grok Search
 
 xAI の Grok API（x_search ツール）を使い、X の投稿を検索して結果を要約する。
+
+## ユーザー情報
+
+- X アカウント: `tanuhack`
+- 「自分の投稿」「自分のポスト」などの指示があった場合は `{"handles":["tanuhack"]}` を使う
 
 ## ワークフロー
 
