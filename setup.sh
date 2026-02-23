@@ -84,6 +84,7 @@ ln -sf "$DOTFILES_DIR/.config/uv/uv.toml" ~/.config/uv/uv.toml
 mkdir -p ~/.config/zellij/layouts
 ln -sf "$DOTFILES_DIR/.config/zellij/config.kdl" ~/.config/zellij/config.kdl
 ln -sf "$DOTFILES_DIR/.config/zellij/layouts/default.kdl" ~/.config/zellij/layouts/default.kdl
+ln -sf "$DOTFILES_DIR/.config/zellij/layouts/tmp.kdl" ~/.config/zellij/layouts/tmp.kdl
 
 mkdir -p ~/.config/ghostty
 ln -sf "$DOTFILES_DIR/.config/ghostty/config" ~/.config/ghostty/config

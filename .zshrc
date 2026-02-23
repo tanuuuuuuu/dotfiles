@@ -48,6 +48,15 @@ setopt correct
 alias vim='nvim'
 
 # ==================================================
+# カスタム関数
+# ==================================================
+# 指定ディレクトリで Nvim + Claude Code の Zellij タブを開く
+# Usage: ztmp [dir]  (省略時はカレントディレクトリ)
+ztmp() {
+  zellij action new-tab --layout ~/.config/zellij/layouts/tmp.kdl --cwd "${1:-.}" --name "tmp"
+}
+
+# ==================================================
 # Zellij自動起動（Ghostty使用時のみ）
 # ==================================================
 if [[ "$TERM" == "xterm-ghostty" ]] && [[ -z "$ZELLIJ" ]]; then
