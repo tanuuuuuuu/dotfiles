@@ -10,10 +10,14 @@ layout {
     }
 
     // 開発用2ペインレイアウト: NeoVim + Claude Code
+    // Claude Code は direnv の環境変数を引き継いで起動する
     pane_template name="dev-layout" {
         pane split_direction="vertical" {
             pane size="65%" name="Vim" command="nvim"
-            pane size="35%" name="Claude Code" command="claude" focus=true
+            pane size="35%" name="Claude Code" command="zsh" {
+                args "-c" "eval \"$(direnv export zsh 2>/dev/null)\" && exec claude"
+                focus true
+            }
         }
     }
 
