@@ -25,6 +25,7 @@ macism com.apple.keylayout.ABC
 # direnv（ディレクトリごとの環境変数管理）
 # ==================================================
 eval "$(direnv hook zsh)"
+eval "$(direnv export zsh 2>/dev/null)"
 
 # ==================================================
 # プロンプト（Starship）
