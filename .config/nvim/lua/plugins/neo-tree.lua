@@ -1,8 +1,18 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
   opts = {
+    commands = {
+      reveal_in_finder = function(state)
+        local node = state.tree:get_node()
+        local path = node:get_id()
+        vim.fn.jobstart({ "open", "-R", path }, { detach = true })
+      end,
+    },
     window = {
       width = 45,
+      mappings = {
+        ["F"] = "reveal_in_finder",
+      },
     },
     filesystem = {
       filtered_items = {
