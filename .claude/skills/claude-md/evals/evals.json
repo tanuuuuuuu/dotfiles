@@ -1,0 +1,23 @@
+{
+  "skill_name": "claude-md",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "このプロジェクトの CLAUDE.md を作って。Python + FastAPI のバックエンド API で、DBは PostgreSQL、ORM は SQLAlchemy。テストは pytest で、`tests/` ディレクトリにある。CI は GitHub Actions。デプロイは Cloud Run。linter は ruff、formatter も ruff format を使ってる。ブランチ名は feature/xxx, fix/xxx の規約。コミットメッセージは Conventional Commits。",
+      "expected_output": "60行以下の簡潔な CLAUDE.md。WHAT→HOW の構成。linter/formatterで対応済みの規約を含まない。セットアップ手順を含まない。テスト実行コマンドが具体的。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "この CLAUDE.md をレビューして改善してほしい:\n\n```markdown\n# MyProject\n\n## セットアップ\n1. Python 3.11 をインストール\n2. pip install -r requirements.txt\n3. .env.example を .env にコピー\n4. docker-compose up -d でDBを起動\n\n## コードスタイル\n- インデントはスペース4つ\n- 文字列はダブルクォートを使う\n- import は isort で並び替える\n- 型ヒントを必ず書く\n- docstring は Google スタイル\n\n## IMPORTANT: テストを忘れずに書くこと\n## IMPORTANT: エラーハンドリングを適切に行うこと\n## IMPORTANT: セキュリティに注意すること\n## IMPORTANT: パフォーマンスを意識すること\n\n## テスト\npytest を使用。\n\n## API 設計\n- REST API\n- レスポンスは {\"data\": ..., \"error\": ...} の形式\n- ページネーションは cursor ベース\n- エンドポイントは kebab-case\n\n## デプロイ\n1. main ブランチにマージ\n2. GitHub Actions で自動デプロイ\n3. Cloud Run にデプロイされる\n4. 手動デプロイは gcloud run deploy --source . --region asia-northeast1\n```\n\n技術スタック: Python + FastAPI、ruff で lint/format してる。",
+      "expected_output": "問題点の指摘（セットアップ手順はREADMEへ、linterカバー済み規約の削除、IMPORTANT乱用の指摘）と改善版の提示。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "dbt + BigQuery のデータパイプラインプロジェクトで CLAUDE.md を作りたいんだけど、何を書けばいいかわからない。モデルは models/ 以下に staging/, intermediate/, marts/ の3層構造。テストは dbt test で実行。CI で sqlfluff の lint チェックもしてる。プロジェクトは日本語メインのチーム。",
+      "expected_output": "WHAT→HOW の構成で、dbt のディレクトリ構造、テスト方法、lint（sqlfluff でカバー済みの規約は省く）、レイヤー構造の規約を含む日本語の CLAUDE.md。",
+      "files": []
+    }
+  ]
+}
