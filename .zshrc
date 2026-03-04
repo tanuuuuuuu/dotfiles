@@ -55,7 +55,9 @@ alias vim='nvim'
 # 指定ディレクトリで Nvim + Claude Code の Zellij タブを開く
 # Usage: ztmp [dir]  (省略時はカレントディレクトリ)
 ztmp() {
-  zellij action new-tab --layout ~/.config/zellij/layouts/tmp.kdl --cwd "${1:-.}" --name "tmp"
+  local dir="${1:-.}"
+  local name="$(realpath "$dir" | sed "s|^$HOME|~|")"
+  zellij action new-tab --layout ~/.config/zellij/layouts/tmp.kdl --cwd "$dir" --name "$name"
 }
 
 # ==================================================
