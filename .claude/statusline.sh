@@ -68,6 +68,7 @@ CTX_BAR=$(make_bar "$PCT")
 CTX_PCT=$(printf "%3d" "$PCT")
 COMPACTIONS=$(echo "$input" | jq -r '.context_window.num_compactions // 0')
 [ -z "$COMPACTIONS" ] || [ "$COMPACTIONS" = "null" ] && COMPACTIONS=0
+[ "$COMPACTIONS" -ge 1 ] 2>/dev/null && CTX_COLOR="$RED"
 CTX_COMPACT="  ${DIM}${COMPACTIONS} compact${RESET}"
 echo -e "ctx ${CTX_COLOR}${CTX_BAR} ${CTX_PCT}%${RESET}${CTX_COMPACT}"
 
