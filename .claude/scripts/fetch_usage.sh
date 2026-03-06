@@ -30,7 +30,8 @@ RESPONSE=$(curl -s --max-time 5 "https://api.anthropic.com/api/oauth/usage" \
 
 # レスポンス検証
 if ! echo "$RESPONSE" | jq -e '.five_hour' > /dev/null 2>&1; then
-    echo '{"error": "API からの応答が不正です。トークンが期限切れの可能性があります。"}'
+    API_ERROR=$(echo "$RESPONSE" | jq -r '.error.message // .error // "不明なエラー"' 2>/dev/null)
+    echo "{\"error\": \"API エラー: ${API_ERROR}\"}"
     exit 1
 fi
 

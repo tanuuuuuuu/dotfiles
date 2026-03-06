@@ -83,8 +83,14 @@ QUOTA_CACHE="/tmp/claude-quota-cache"
 QUOTA_CACHE_TTL=60
 
 # キャッシュの経過秒数
+NOW_EPOCH=$(date +%s)
 if [ -f "$QUOTA_CACHE" ]; then
-    CACHE_AGE=$(( $(date +%s) - $(stat -f %m "$QUOTA_CACHE") ))
+    CACHE_AGE=$(( NOW_EPOCH - $(stat -f %m "$QUOTA_CACHE") ))
+    # リセット時刻が過去ならキャッシュを無効化（データが古い）
+    read -r _ _ CACHED_5H_EPOCH _ < "$QUOTA_CACHE"
+    if [ -n "$CACHED_5H_EPOCH" ] && [ "$CACHED_5H_EPOCH" != "0" ] && [ "$CACHED_5H_EPOCH" -le "$NOW_EPOCH" ] 2>/dev/null; then
+        CACHE_AGE=$(( QUOTA_CACHE_TTL + 1 ))
+    fi
 else
     CACHE_AGE=$(( QUOTA_CACHE_TTL + 1 ))
 fi
@@ -93,23 +99,26 @@ fi
 if [ "$CACHE_AGE" -gt "$QUOTA_CACHE_TTL" ]; then
     (
         QUOTA_JSON=$(bash ~/.claude/scripts/fetch_usage.sh 2>/dev/null)
-        if echo "$QUOTA_JSON" | jq -e '.five_hour' > /dev/null 2>&1; then
-            FIVE_H=$(echo "$QUOTA_JSON" | jq -r '.five_hour.utilization // 0')
-            SEVEN_D=$(echo "$QUOTA_JSON" | jq -r '.seven_day.utilization // 0')
-            FIVE_H_RESETS_AT=$(echo "$QUOTA_JSON" | jq -r '.five_hour.resets_at // empty')
-            SEVEN_D_RESETS_AT=$(echo "$QUOTA_JSON" | jq -r '.seven_day.resets_at // empty')
-            FIVE_H_EPOCH="0"
-            if [ -n "$FIVE_H_RESETS_AT" ]; then
-                FIVE_H_RESET=$(echo "$FIVE_H_RESETS_AT" | sed 's/\.[0-9]*//' | sed 's/\([-+][0-9][0-9]\):\([0-9][0-9]\)$/\1\2/')
-                FIVE_H_EPOCH=$(date -j -f "%Y-%m-%dT%H:%M:%S%z" "$FIVE_H_RESET" "+%s" 2>/dev/null || echo "0")
-            fi
-            SEVEN_D_EPOCH="0"
-            if [ -n "$SEVEN_D_RESETS_AT" ]; then
-                SEVEN_D_RESET=$(echo "$SEVEN_D_RESETS_AT" | sed 's/\.[0-9]*//' | sed 's/\([-+][0-9][0-9]\):\([0-9][0-9]\)$/\1\2/')
-                SEVEN_D_EPOCH=$(date -j -f "%Y-%m-%dT%H:%M:%S%z" "$SEVEN_D_RESET" "+%s" 2>/dev/null || echo "0")
-            fi
-            echo "$FIVE_H $SEVEN_D $FIVE_H_EPOCH $SEVEN_D_EPOCH" > "$QUOTA_CACHE"
+        if ! echo "$QUOTA_JSON" | jq -e '.five_hour' > /dev/null 2>&1; then
+            # API 失敗時: キャッシュがあれば touch して TTL 分は再試行を抑制
+            [ -f "$QUOTA_CACHE" ] && touch "$QUOTA_CACHE"
+            exit 0
         fi
+        FIVE_H=$(echo "$QUOTA_JSON" | jq -r '.five_hour.utilization // 0')
+        SEVEN_D=$(echo "$QUOTA_JSON" | jq -r '.seven_day.utilization // 0')
+        FIVE_H_RESETS_AT=$(echo "$QUOTA_JSON" | jq -r '.five_hour.resets_at // empty')
+        SEVEN_D_RESETS_AT=$(echo "$QUOTA_JSON" | jq -r '.seven_day.resets_at // empty')
+        FIVE_H_EPOCH="0"
+        if [ -n "$FIVE_H_RESETS_AT" ]; then
+            FIVE_H_RESET=$(echo "$FIVE_H_RESETS_AT" | sed 's/\.[0-9]*//' | sed 's/\([-+][0-9][0-9]\):\([0-9][0-9]\)$/\1\2/')
+            FIVE_H_EPOCH=$(date -j -f "%Y-%m-%dT%H:%M:%S%z" "$FIVE_H_RESET" "+%s" 2>/dev/null || echo "0")
+        fi
+        SEVEN_D_EPOCH="0"
+        if [ -n "$SEVEN_D_RESETS_AT" ]; then
+            SEVEN_D_RESET=$(echo "$SEVEN_D_RESETS_AT" | sed 's/\.[0-9]*//' | sed 's/\([-+][0-9][0-9]\):\([0-9][0-9]\)$/\1\2/')
+            SEVEN_D_EPOCH=$(date -j -f "%Y-%m-%dT%H:%M:%S%z" "$SEVEN_D_RESET" "+%s" 2>/dev/null || echo "0")
+        fi
+        echo "$FIVE_H $SEVEN_D $FIVE_H_EPOCH $SEVEN_D_EPOCH" > "$QUOTA_CACHE"
     ) &
 fi
 
