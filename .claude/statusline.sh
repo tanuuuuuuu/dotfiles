@@ -54,7 +54,7 @@ if git -C "$CURRENT_DIR" rev-parse --git-dir > /dev/null 2>&1; then
         if [ -n "$(git -C "$CURRENT_DIR" status --porcelain 2>/dev/null)" ]; then
             DIRTY="${YELLOW}*${RESET}"
         fi
-        GIT_INFO=" (${BRANCH}${DIRTY})"
+        GIT_INFO=" [${BRANCH}${DIRTY}]"
     fi
 fi
 
@@ -66,10 +66,16 @@ PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1
 CTX_COLOR=$(color_for_pct "$PCT")
 CTX_BAR=$(make_bar "$PCT")
 CTX_PCT=$(printf "%3d" "$PCT")
-COMPACTIONS=$(echo "$input" | jq -r '.context_window.num_compactions // 0')
-[ -z "$COMPACTIONS" ] || [ "$COMPACTIONS" = "null" ] && COMPACTIONS=0
+TRANSCRIPT=$(echo "$input" | jq -r '.transcript_path // empty')
+COMPACTIONS=0
+if [ -n "$TRANSCRIPT" ] && [ -f "$TRANSCRIPT" ]; then
+    COMPACTIONS=$(grep '"compactMetadata"' "$TRANSCRIPT" 2>/dev/null | grep -c '"trigger"')
+    [ -z "$COMPACTIONS" ] && COMPACTIONS=0
+fi
 [ "$COMPACTIONS" -ge 1 ] 2>/dev/null && CTX_COLOR="$RED"
-CTX_COMPACT="  ${DIM}${COMPACTIONS} compact${RESET}"
+COMPACT_LABEL="compactions"
+[ "$COMPACTIONS" -eq 1 ] 2>/dev/null && COMPACT_LABEL="compaction"
+CTX_COMPACT="  ${DIM}${COMPACTIONS} ${COMPACT_LABEL}${RESET}"
 echo -e "ctx ${CTX_COLOR}${CTX_BAR} ${CTX_PCT}%${RESET}${CTX_COMPACT}"
 
 # --- 3-4行目: レートリミット (キャッシュ付き) ---
@@ -123,8 +129,8 @@ if [ -f "$QUOTA_CACHE" ]; then
         FIVE_RESET_STR=$(format_reset_time "$FIVE_H_EPOCH")
         SEVEN_RESET_STR=$(format_reset_time "$SEVEN_D_EPOCH")
 
-        FIVE_RESET_PART="  ${DIM}resets ${FIVE_RESET_STR:--}${RESET}"
-        SEVEN_RESET_PART="  ${DIM}resets ${SEVEN_RESET_STR:--}${RESET}"
+        FIVE_RESET_PART="  ${DIM}reset ${FIVE_RESET_STR:--}${RESET}"
+        SEVEN_RESET_PART="  ${DIM}reset ${SEVEN_RESET_STR:--}${RESET}"
 
         FIVE_PCT=$(printf "%3d" "$FIVE_H_INT")
         SEVEN_PCT=$(printf "%3d" "$SEVEN_D_INT")
