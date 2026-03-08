@@ -16,6 +16,18 @@ return {
       },
     },
     autocmds = {
+      -- 外部でファイルが変更されたら自動リロード
+      auto_reload = {
+        {
+          event = { "FocusGained", "BufEnter", "CursorHold" },
+          command = "silent! checktime",
+        },
+        {
+          -- バッファにも変更がある場合は確認なしでリロード（外部ツール優先）
+          event = "FileChangedShell",
+          callback = function() vim.v.fcs_choice = "reload" end,
+        },
+      },
       -- アクティブウィンドウのみカーソルラインを表示
       active_window_cursorline = {
         {
