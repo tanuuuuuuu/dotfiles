@@ -80,7 +80,7 @@ echo -e "ctx ${CTX_COLOR}${CTX_BAR} ${CTX_PCT}%${RESET}${CTX_COMPACT}"
 
 # --- 3-4行目: レートリミット (キャッシュ付き) ---
 QUOTA_CACHE="/tmp/claude-quota-cache"
-QUOTA_CACHE_TTL=60
+QUOTA_CACHE_TTL=300
 
 # キャッシュの経過秒数
 NOW_EPOCH=$(date +%s)
