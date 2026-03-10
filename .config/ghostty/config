@@ -22,21 +22,24 @@ window-padding-balance = true
 # ウィンドウの装飾テーマ
 window-theme = ghostty
 
+# 非アクティブペインを暗くする（0.0〜1.0）
+unfocused-split-opacity = 0.3
+
 
 # ==================================================
 # 背景
 # ==================================================
 
 # 不透明度（0.0〜1.0）
-background-opacity = 1
+background-opacity = 0.9
 
 # ぼかし半径（ピクセル）
 background-blur-radius = 20
 
-# 背景画像
-background-image = bg.jpg
-background-image-opacity = 0.07
-background-image-fit = cover
+# 背景画像（分割時に各ペインで繰り返されるため無効化）
+# background-image = bg.jpg
+# background-image-opacity = 0.07
+# background-image-fit = cover
 
 
 # ==================================================
@@ -79,6 +82,9 @@ macos-titlebar-style = transparent
 # 起動時にフルスクリーン
 fullscreen = true
 
+# non-native フルスクリーン（背景透過を有効にするため）
+macos-non-native-fullscreen = true
+
 
 # ==================================================
 # キーバインド
@@ -87,5 +93,5 @@ fullscreen = true
 # Shift+Enter で ESC+CR を送信
 keybind = shift+enter=text:\x1b\r
 
-# macOSでOptionキーをAltとして使う（Zellijのキーバインドに必要）
+# macOSでOptionキーをAltとして使う
 macos-option-as-alt = left

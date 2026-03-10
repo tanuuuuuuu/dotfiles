@@ -11,7 +11,6 @@ macOS 用の個人設定ファイル管理リポジトリ。
 - Python パッケージ管理: uv
 - エディタ: Neovim
 - プロンプト: Starship
-- ターミナルマルチプレクサ: Zellij
 - ターミナルエミュレータ: Ghostty
 - ランチャー: Raycast
 - コーディングエージェント: Claude Code

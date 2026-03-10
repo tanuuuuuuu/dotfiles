@@ -3,7 +3,7 @@
 macOS 用の個人設定ファイル管理リポジトリ。
 
 ![開発環境](assets/dev-environment.png)
-*Ghostty + Zellij 上で AstroNvim と Claude Code を使った開発環境*
+*Ghostty 上で AstroNvim と Claude Code を使った開発環境*
 
 シェル、エディタ、ターミナル等の設定をシンボリックリンクで管理する。`~/dotfiles/` に clone して使用。
 
@@ -18,7 +18,6 @@ macOS 用の個人設定ファイル管理リポジトリ。
 | シェル | zsh | デフォルトシェル |
 | | Starship | カスタマイズ可能なプロンプト |
 | ターミナル | Ghostty | ターミナルエミュレータ |
-| | Zellij | ターミナルマルチプレクサ（tmux 代替） |
 | 開発ツール | Neovim（AstroNvim ベース） | エディタ |
 | | Claude Code | コーディングエージェント |
 | ユーティリティ | Raycast | ランチャーアプリ |
@@ -39,8 +38,7 @@ macOS 用の個人設定ファイル管理リポジトリ。
 │   ├── mise/              # ランタイム管理設定
 │   ├── raycast/           # Raycast スクリプト
 │   ├── starship.toml      # プロンプト設定
-│   ├── uv/                # Python パッケージ管理設定
-│   └── zellij/            # ターミナルマルチプレクサ設定
+│   └── uv/                # Python パッケージ管理設定
 │
 └── .claude/               # ~/.claude/ にリンク（ユーザーレベル設定）
     ├── CLAUDE.md          # カスタム指示
@@ -81,14 +79,6 @@ source ~/.zshrc  # またはターミナル再起動
 6. Claude Code をインストール（未インストールの場合）
 7. Google Cloud SDK をインストール（未インストールの場合）
 8. シンボリックリンクを作成
-
-## カスタムコマンド
-
-`.zshrc` で定義しているシェル関数。
-
-| コマンド | 説明 |
-|----------|------|
-| `ztmp [dir]` | 指定ディレクトリで Nvim + Claude Code の Zellij タブを開く（省略時はカレントディレクトリ） |
 
 ## macOS システム設定
 
