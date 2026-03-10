@@ -65,6 +65,7 @@ gdev() {
       set cfg to new surface configuration
       set command of cfg to "$(which claude)"
       set initial working directory of cfg to "${dir}"
+      set environment variables of cfg to {"PATH=$HOME/.local/bin:$PATH"}
 
       set term to focused terminal of selected tab of front window
       set newTerm to split term direction right with configuration cfg
