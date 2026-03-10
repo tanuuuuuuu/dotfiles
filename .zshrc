@@ -49,3 +49,32 @@ setopt correct
 # ==================================================
 alias vim='nvim'
 
+# ==================================================
+# Ghostty ヘルパー関数
+# ==================================================
+# 指定ディレクトリで垂直分割（左: nvim, 右: claude code）
+gdev() {
+  local dir="${1:-$HOME/dotfiles}"
+  dir="$(cd "$dir" 2>/dev/null && pwd)" || { echo "gdev: ディレクトリが見つかりません: $1"; return 1; }
+
+  cd "$dir"
+
+  # Ghostty API で右に分割 + claude 起動 + リサイズ
+  osascript <<EOF
+    tell application "Ghostty"
+      set cfg to new surface configuration
+      set command of cfg to "$(which claude)"
+      set initial working directory of cfg to "${dir}"
+
+      set term to focused terminal of selected tab of front window
+      set newTerm to split term direction right with configuration cfg
+
+      perform action "resize_split:right,300" on term
+      focus newTerm
+    end tell
+EOF
+
+  # 左ペインで nvim 起動
+  nvim
+}
+

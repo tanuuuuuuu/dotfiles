@@ -79,11 +79,8 @@ macos-titlebar-style = transparent
 # フルスクリーン
 # ==================================================
 
-# 起動時にフルスクリーン
-fullscreen = true
-
-# non-native フルスクリーン（背景透過を有効にするため）
-macos-non-native-fullscreen = true
+# 起動時に non-native フルスクリーン（背景透過を有効にするため）
+fullscreen = non-native
 
 
 # ==================================================

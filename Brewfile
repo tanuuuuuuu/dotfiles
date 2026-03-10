@@ -1,4 +1,5 @@
 tap "laishulu/homebrew"
+tap "manaflow-ai/cmux"
 
 brew "defaultbrowser"
 brew "direnv"
@@ -21,6 +22,7 @@ cask "aqua-voice"
 cask "arc"
 cask "chatwork"
 cask "cleanshot"
+cask "cmux"
 cask "discord"
 cask "displaylink"
 cask "font-hackgen"
