@@ -52,7 +52,7 @@ alias vim='nvim'
 # ==================================================
 # Ghostty ヘルパー関数
 # ==================================================
-# 指定ディレクトリで垂直分割（左: nvim, 右: claude code）
+## 指定ディレクトリで垂直分割（左: nvim, 右: claude code）
 gdev() {
   local dir="${1:-$HOME/dotfiles}"
   dir="$(cd "$dir" 2>/dev/null && pwd)" || { echo "gdev: ディレクトリが見つかりません: $1"; return 1; }
