@@ -27,14 +27,6 @@ unfocused-split-opacity = 0.3
 
 
 # ==================================================
-# クリップボード
-# ==================================================
-
-# コピー時のフォーマット（1.3.0 でデフォルトが mixed に変更されたため明示指定）
-copy-format = text
-
-
-# ==================================================
 # 背景
 # ==================================================
 
@@ -97,6 +89,9 @@ fullscreen = non-native
 
 # Shift+Enter で ESC+CR を送信
 keybind = shift+enter=text:\x1b\r
+
+# コピー時のフォーマットをプレーンテキストに固定（1.3.0 でデフォルトが mixed に変更されたため）
+keybind = super+c=copy_to_clipboard:plain
 
 # macOSでOptionキーをAltとして使う
 macos-option-as-alt = left
