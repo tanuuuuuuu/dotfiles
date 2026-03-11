@@ -1,6 +1,9 @@
 ---
 name: activity-log
 description: Claude Code の活動ログをプロジェクト横断で取得・表示する。「/activity-log」「今日何やった」「今週の活動」「Claude Code の履歴」「やったことまとめ」「活動ログ」で使用。ユーザーが「今日何をしたか振り返りたい」「日報を書きたい」「作業ログを確認したい」と言った場合にも積極的に使用する。
+allowed-tools:
+  - Bash(date:*)
+  - Bash(python:*)
 ---
 
 # Activity Log
