@@ -123,4 +123,10 @@ ln -sfn "$DOTFILES_DIR/.claude/skills" ~/.claude/skills
 ln -sf "$DOTFILES_DIR/.claude/sounds/complete.wav" ~/.claude/sounds/complete.wav
 ln -sf "$DOTFILES_DIR/.claude/sounds/confirm.wav" ~/.claude/sounds/confirm.wav
 
+# 自作スクリプト（bin/）をシンボリックリンク
+mkdir -p ~/.local/bin
+for script in "$DOTFILES_DIR"/bin/*; do
+    [ -f "$script" ] && ln -sf "$script" ~/.local/bin/
+done
+
 echo "Setup complete! Run 'source ~/.zshrc' to apply changes."

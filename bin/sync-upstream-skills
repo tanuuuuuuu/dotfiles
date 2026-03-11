@@ -1,0 +1,53 @@
+#!/bin/bash
+set -euo pipefail
+
+SKILLS_REPO_URL="https://github.com/anthropics/skills.git"
+SKILLS_CACHE="/tmp/anthropics-skills"
+TARGET_DIR="${DOTFILES_DIR:-$HOME/dotfiles}/.claude/skills"
+
+# 公式リポジトリから同期するスキル一覧
+OFFICIAL_SKILLS=(
+    skill-creator
+    doc-coauthoring
+    internal-comms
+)
+
+# 公式リポジトリを取得・更新
+if [ -d "$SKILLS_CACHE/.git" ]; then
+    echo "Updating official skills repository..."
+    git -C "$SKILLS_CACHE" pull --quiet
+else
+    echo "Cloning official skills repository..."
+    rm -rf "$SKILLS_CACHE"
+    git clone --depth 1 --quiet "$SKILLS_REPO_URL" "$SKILLS_CACHE"
+fi
+
+# 各スキルを同期
+updated=0
+skipped=0
+for skill in "${OFFICIAL_SKILLS[@]}"; do
+    src="$SKILLS_CACHE/skills/$skill"
+    dest="$TARGET_DIR/$skill"
+
+    if [ ! -d "$src" ]; then
+        echo "  SKIP: $skill (not found in official repo)"
+        ((skipped++))
+        continue
+    fi
+
+    # 差分があるか確認
+    if diff -rq "$src" "$dest" > /dev/null 2>&1; then
+        echo "  OK:   $skill (up to date)"
+    else
+        rsync -a --delete "$src/" "$dest/"
+        echo "  UP:   $skill (updated)"
+        ((updated++))
+    fi
+done
+
+echo ""
+echo "Done! Updated: $updated, Skipped: $skipped"
+
+if [ "$updated" -gt 0 ]; then
+    echo "Run 'cd ~/dotfiles && git diff' to review changes."
+fi

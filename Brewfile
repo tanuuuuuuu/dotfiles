@@ -4,6 +4,7 @@ brew "defaultbrowser"
 brew "direnv"
 brew "fzf"
 brew "gh"
+brew "googleworkspace-cli"
 brew "laishulu/homebrew/macism"  # IME切り替え（Neovim用）
 brew "luarocks"
 brew "mise"
