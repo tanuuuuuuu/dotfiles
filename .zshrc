@@ -59,11 +59,20 @@ gdev() {
 
   cd "$dir"
 
+  # サブディレクトリの .claude/ を検出して --add-dir 引数を構築
+  local add_dir_args=""
+  while IFS= read -r claude_dir; do
+    local sub_dir="${claude_dir%/.claude}"
+    if [[ "$sub_dir" != "$dir" ]]; then
+      add_dir_args+=" --add-dir ${sub_dir}"
+    fi
+  done < <(find "$dir" -type d -name ".claude" -not -path "*/.claude/*" 2>/dev/null)
+
   # Ghostty API で右に分割 + claude 起動 + リサイズ
   osascript <<EOF
     tell application "Ghostty"
       set cfg to new surface configuration
-      set command of cfg to "$(which claude)"
+      set command of cfg to "$(which claude)${add_dir_args}"
       set initial working directory of cfg to "${dir}"
       set environment variables of cfg to {"PATH=$HOME/.local/bin:$PATH"}
 
