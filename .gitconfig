@@ -1,3 +1,5 @@
 [user]
 	name = tanu
 	email = 102398347+tanuuuuuuu@users.noreply.github.com
+[core]
+	excludesfile = ~/.config/git/ignore
