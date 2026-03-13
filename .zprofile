@@ -18,3 +18,8 @@ export PATH="$HOME/.local/bin:$PATH"
 if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then
   . "$HOME/google-cloud-sdk/path.zsh.inc"
 fi
+
+# ==================================================
+# Obsidian CLI
+# ==================================================
+export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
