@@ -1,17 +1,15 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
   opts = {
-    commands = {
-      reveal_in_finder = function(state)
-        local node = state.tree:get_node()
-        local path = node:get_id()
-        vim.fn.jobstart({ "open", "-R", path }, { detach = true })
-      end,
-    },
     window = {
-      width = 45,
+      width = 40,
       mappings = {
-        ["F"] = "reveal_in_finder",
+        ["<"] = function()
+          vim.cmd("vertical resize -5")
+        end,
+        [">"] = function()
+          vim.cmd("vertical resize +5")
+        end,
       },
     },
     filesystem = {
