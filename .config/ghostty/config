@@ -13,8 +13,8 @@ theme = GitHub Dark
 confirm-close-surface = false
 
 # 内側パディング（ピクセル）
-window-padding-x = 16
-window-padding-y = 16
+window-padding-x = 24
+window-padding-y = 24
 
 # パディングを自動調整してコンテンツを中央配置
 window-padding-balance = true
@@ -23,7 +23,7 @@ window-padding-balance = true
 window-theme = ghostty
 
 # 非アクティブペインを暗くする（0.15〜1.0）
-unfocused-split-opacity = 0.3
+unfocused-split-opacity = 0.4
 
 
 # ==================================================
