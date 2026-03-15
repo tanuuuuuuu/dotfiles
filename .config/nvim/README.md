@@ -45,6 +45,7 @@ nvim/
 │       ├── mason.lua       # LSP/ツール管理（未使用）
 │       ├── neo-tree.lua    # ファイルツリー
 │       ├── none-ls.lua     # フォーマッタ/リンター（未使用）
+│       ├── table-mode.lua  # Markdown テーブル自動整形
 │       ├── treesitter.lua  # シンタックスハイライト（未使用）
 │       └── user.lua        # サンプル設定（未使用）
 ├── .luarc.json           # Lua LSP 設定
@@ -83,6 +84,7 @@ nvim/
 | bufferline | 追加 | バッファをタブ風に表示 | 複数ファイル編集時にバッファを視覚的に管理しやすくするため |
 | im-select | 追加 | Insert モードを抜けたとき IME を英語に切替 | Normal モードに戻ったとき日本語入力が残る問題を解消 |
 | lualine | 追加 | モード表示付きステータスライン | 現在のモード（Normal/Insert/Visual 等）を色付きで表示 |
+| vim-table-mode | 追加 | Markdown テーブル自動整形 | 保存時にテーブルの列幅を自動で揃える |
 
 > [!NOTE]
 > **種別**: 標準 = AstroNvim プリインストール（設定カスタマイズ）、追加 = 後から追加したプラグイン

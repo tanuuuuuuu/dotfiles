@@ -15,6 +15,12 @@ return {
         swapfile = false, -- スワップファイルを無効化（Git + undofile で十分）
       },
     },
+    mappings = {
+      n = {
+        ["<Tab>"] = { "<cmd>bnext<cr>", desc = "Next buffer" },
+        ["<S-Tab>"] = { "<cmd>bprevious<cr>", desc = "Previous buffer" },
+      },
+    },
     autocmds = {
       -- 外部でファイルが変更されたら自動リロード
       auto_reload = {
@@ -49,6 +55,21 @@ return {
         {
           event = { "WinLeave", "BufLeave" },
           callback = function() vim.opt_local.cursorline = false end,
+        },
+      },
+      -- ファイルを開いた時に空の [No Name] バッファを削除
+      cleanup_noname = {
+        {
+          event = "BufReadPost",
+          callback = function()
+            vim.schedule(function()
+              for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_get_name(buf) == "" and vim.bo[buf].buftype == "" and vim.api.nvim_buf_line_count(buf) <= 1 and vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1] == "" then
+                  pcall(vim.api.nvim_buf_delete, buf, {})
+                end
+              end
+            end)
+          end,
         },
       },
     },
