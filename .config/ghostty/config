@@ -99,3 +99,20 @@ keybind = super+c=copy_to_clipboard:plain
 
 # macOSでOptionキーをAltとして使う
 macos-option-as-alt = left
+
+
+# ==================================================
+# クイックターミナル（Quake スタイル）
+# ==================================================
+
+# どこからでも Cmd+` で呼び出し（global キーバインド）
+keybind = global:super+grave_accent=toggle_quick_terminal
+
+# 表示位置（top / bottom / left / right）
+quick-terminal-position = right
+
+# サイズ（主軸,副軸 / %, px 指定可。right の場合: 幅,高さ）
+quick-terminal-size = 35%
+
+# アニメーション時間（秒、0 で無効化）
+quick-terminal-animation-duration = 0.3
