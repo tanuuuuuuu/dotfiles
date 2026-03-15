@@ -20,7 +20,7 @@ gswitch() {
   fi
 
   # configuration を activate
-  if ! gcloud config configurations activate "$config_name" 2>/dev/null; then
+  if ! gcloud config configurations activate "$config_name" --quiet 2>/dev/null; then
     echo "エラー: configuration '$config_name' が見つかりません"
     echo ""
     echo "利用可能な configurations:"
