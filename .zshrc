@@ -56,3 +56,10 @@ alias vim='nvim'
 ## 実装は bin/gdev を参照
 source "$HOME/.local/bin/gdev"
 
+# ==================================================
+# gcloud 切り替え
+# ==================================================
+## gswitch: gcloud configuration + ADC を一括切り替え
+## gswitch-setup: 新規 configuration の作成
+source "$HOME/.local/bin/gswitch"
+
