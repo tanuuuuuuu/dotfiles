@@ -6,6 +6,7 @@ brew "fzf"
 brew "gh"
 brew "googleworkspace-cli"
 brew "laishulu/homebrew/macism"  # IME切り替え（Neovim用）
+brew "librsvg"
 brew "luarocks"
 brew "mise"
 brew "neovim"
