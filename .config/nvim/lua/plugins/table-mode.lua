@@ -35,18 +35,47 @@ return {
       end
     end
 
+    -- セパレータ行のダッシュを最小化（Realign が幅を正しく計算できるようにする）
+    -- ※ プラグインは Markdown の | --- | 形式をボーダーとして認識しないため、
+    --   ダッシュがセル内容として扱われ列幅が縮まなくなる問題の対策
+    local function minimize_separator_lines(buf)
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+      for i, line in ipairs(lines) do
+        if line:match("^|[%-:%s|]+$") and line:match("%-") then
+          local new_cells = {}
+          for cell in line:gmatch("|([^|]+)") do
+            local stripped = cell:match("^%s*(.-)%s*$")
+            if stripped:match("^:.*:$") then
+              table.insert(new_cells, " :-: ")
+            elseif stripped:match("^:") then
+              table.insert(new_cells, " :- ")
+            elseif stripped:match(":$") then
+              table.insert(new_cells, " -: ")
+            else
+              table.insert(new_cells, " - ")
+            end
+          end
+          local new_line = "|" .. table.concat(new_cells, "|") .. "|"
+          vim.api.nvim_buf_set_lines(buf, i - 1, i, false, { new_line })
+        end
+      end
+    end
+
     -- 保存時に全テーブルを整形する autocmd
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = vim.api.nvim_create_augroup("table_mode_format_on_save", { clear = true }),
       pattern = "*.md",
       callback = function()
-        local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
         local save_cursor = vim.api.nvim_win_get_cursor(0)
 
         -- Realign にはテーブルモード ON が必要
         pcall(vim.cmd, "silent TableModeEnable")
 
+        -- セパレータ行を最小化してから Realign（列幅がデータ内容のみで決まるようにする）
+        minimize_separator_lines(0)
+
         -- テーブル行（|で始まる行）のブロックを検出し、各テーブルで Realign を実行
+        local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
         local i = 1
         while i <= #lines do
           if lines[i]:match("^%s*|") then
@@ -60,7 +89,7 @@ return {
           end
         end
 
-        -- セパレータ行のダッシュを修正
+        -- セパレータ行のダッシュをセル幅に合わせて復元
         fix_separator_lines(0)
 
         pcall(vim.cmd, "silent TableModeDisable")
