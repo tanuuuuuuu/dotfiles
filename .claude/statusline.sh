@@ -23,15 +23,22 @@ color_for_pct() {
     fi
 }
 
-# プログレスバーを生成 (10セグメント, ▰▱)
+# プログレスバーを生成 (10セグメント, █░)
+# 引数: $1=パーセント $2=バーの色
 make_bar() {
     local pct=$1
+    local color=$2
     local filled=$((pct * 10 / 100))
     [ "$filled" -gt 10 ] && filled=10
     local empty=$((10 - filled))
     local bar=""
-    [ "$filled" -gt 0 ] && bar=$(printf "%${filled}s" | tr ' ' '■')
-    [ "$empty" -gt 0 ] && bar="${bar}$(printf "%${empty}s" | tr ' ' '□')"
+
+    [ "$filled" -gt 0 ] && bar="${color}$(printf "%${filled}s" | tr ' ' '█')"
+
+    if [ "$empty" -gt 0 ]; then
+        bar="${bar}${DIM}$(printf "%${empty}s" | tr ' ' '░')${RESET}"
+    fi
+
     echo "$bar"
 }
 
@@ -64,8 +71,7 @@ echo -e "${DISPLAY_DIR}${GIT_INFO}"
 PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
 [ -z "$PCT" ] || [ "$PCT" = "null" ] && PCT=0
 CTX_COLOR=$(color_for_pct "$PCT")
-CTX_BAR=$(make_bar "$PCT")
-CTX_PCT=$(printf "%3d" "$PCT")
+CTX_PCT="${PCT}"
 TRANSCRIPT=$(echo "$input" | jq -r '.transcript_path // empty')
 COMPACTIONS=0
 if [ -n "$TRANSCRIPT" ] && [ -f "$TRANSCRIPT" ]; then
@@ -73,34 +79,24 @@ if [ -n "$TRANSCRIPT" ] && [ -f "$TRANSCRIPT" ]; then
     [ -z "$COMPACTIONS" ] && COMPACTIONS=0
 fi
 [ "$COMPACTIONS" -ge 1 ] 2>/dev/null && CTX_COLOR="$RED"
-COMPACT_LABEL="compactions"
-[ "$COMPACTIONS" -eq 1 ] 2>/dev/null && COMPACT_LABEL="compaction"
-CTX_COMPACT="  ${DIM}${COMPACTIONS} ${COMPACT_LABEL}${RESET}"
-echo -e "ctx ${CTX_COLOR}${CTX_BAR} ${CTX_PCT}%${RESET}${CTX_COMPACT}"
+CTX_BAR=$(make_bar "$PCT" "$CTX_COLOR")
+CTX_PART="ctx ${CTX_BAR} ${CTX_COLOR}${CTX_PCT}%${RESET}"
 
-# --- 3-4行目: レートリミット (入力JSONから取得) ---
+# --- 2行目: コンテキスト | 5h | 7d を1行で表示 ---
 FIVE_H=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' | cut -d. -f1)
 SEVEN_D=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty' | cut -d. -f1)
 
 if [ -n "$FIVE_H" ] && [ -n "$SEVEN_D" ]; then
-    FIVE_H_EPOCH=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // 0')
-    SEVEN_D_EPOCH=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // 0')
-
     FIVE_COLOR=$(color_for_pct "$FIVE_H")
     SEVEN_COLOR=$(color_for_pct "$SEVEN_D")
 
-    FIVE_BAR=$(make_bar "$FIVE_H")
-    SEVEN_BAR=$(make_bar "$SEVEN_D")
+    FIVE_BAR=$(make_bar "$FIVE_H" "$FIVE_COLOR")
+    SEVEN_BAR=$(make_bar "$SEVEN_D" "$SEVEN_COLOR")
 
-    FIVE_RESET_STR=$(format_reset_time "$FIVE_H_EPOCH")
-    SEVEN_RESET_STR=$(format_reset_time "$SEVEN_D_EPOCH")
+    FIVE_PCT="${FIVE_H}"
+    SEVEN_PCT="${SEVEN_D}"
 
-    FIVE_RESET_PART="  ${DIM}reset ${FIVE_RESET_STR:--}${RESET}"
-    SEVEN_RESET_PART="  ${DIM}reset ${SEVEN_RESET_STR:--}${RESET}"
-
-    FIVE_PCT=$(printf "%3d" "$FIVE_H")
-    SEVEN_PCT=$(printf "%3d" "$SEVEN_D")
-
-    echo -e "5h  ${FIVE_COLOR}${FIVE_BAR} ${FIVE_PCT}%${RESET}${FIVE_RESET_PART}"
-    echo -e "7d  ${SEVEN_COLOR}${SEVEN_BAR} ${SEVEN_PCT}%${RESET}${SEVEN_RESET_PART}"
+    echo -e "${CTX_PART} ${DIM}|${RESET} 5h ${FIVE_BAR} ${FIVE_COLOR}${FIVE_PCT}%${RESET} ${DIM}|${RESET} 7d ${SEVEN_BAR} ${SEVEN_COLOR}${SEVEN_PCT}%${RESET}"
+else
+    echo -e "${CTX_PART}"
 fi
