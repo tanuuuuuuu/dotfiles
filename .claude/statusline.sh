@@ -78,73 +78,29 @@ COMPACT_LABEL="compactions"
 CTX_COMPACT="  ${DIM}${COMPACTIONS} ${COMPACT_LABEL}${RESET}"
 echo -e "ctx ${CTX_COLOR}${CTX_BAR} ${CTX_PCT}%${RESET}${CTX_COMPACT}"
 
-# --- 3-4行目: レートリミット (キャッシュ付き) ---
-QUOTA_CACHE="/tmp/claude-quota-cache"
-QUOTA_CACHE_TTL=300
+# --- 3-4行目: レートリミット (入力JSONから取得) ---
+FIVE_H=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' | cut -d. -f1)
+SEVEN_D=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty' | cut -d. -f1)
 
-# キャッシュの経過秒数
-NOW_EPOCH=$(date +%s)
-if [ -f "$QUOTA_CACHE" ]; then
-    CACHE_AGE=$(( NOW_EPOCH - $(stat -f %m "$QUOTA_CACHE") ))
-    # リセット時刻が過去ならキャッシュを無効化（データが古い）
-    read -r _ _ CACHED_5H_EPOCH _ < "$QUOTA_CACHE"
-    if [ -n "$CACHED_5H_EPOCH" ] && [ "$CACHED_5H_EPOCH" != "0" ] && [ "$CACHED_5H_EPOCH" -le "$NOW_EPOCH" ] 2>/dev/null; then
-        CACHE_AGE=$(( QUOTA_CACHE_TTL + 1 ))
-    fi
-else
-    CACHE_AGE=$(( QUOTA_CACHE_TTL + 1 ))
-fi
+if [ -n "$FIVE_H" ] && [ -n "$SEVEN_D" ]; then
+    FIVE_H_EPOCH=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // 0')
+    SEVEN_D_EPOCH=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // 0')
 
-# バックグラウンドで更新
-if [ "$CACHE_AGE" -gt "$QUOTA_CACHE_TTL" ]; then
-    (
-        QUOTA_JSON=$(bash ~/.claude/scripts/fetch_usage.sh 2>/dev/null)
-        if ! echo "$QUOTA_JSON" | jq -e '.five_hour' > /dev/null 2>&1; then
-            # API 失敗時: キャッシュがあれば touch して TTL 分は再試行を抑制
-            [ -f "$QUOTA_CACHE" ] && touch "$QUOTA_CACHE"
-            exit 0
-        fi
-        FIVE_H=$(echo "$QUOTA_JSON" | jq -r '.five_hour.utilization // 0')
-        SEVEN_D=$(echo "$QUOTA_JSON" | jq -r '.seven_day.utilization // 0')
-        FIVE_H_RESETS_AT=$(echo "$QUOTA_JSON" | jq -r '.five_hour.resets_at // empty')
-        SEVEN_D_RESETS_AT=$(echo "$QUOTA_JSON" | jq -r '.seven_day.resets_at // empty')
-        FIVE_H_EPOCH="0"
-        if [ -n "$FIVE_H_RESETS_AT" ]; then
-            FIVE_H_RESET=$(echo "$FIVE_H_RESETS_AT" | sed 's/\.[0-9]*//' | sed 's/\([-+][0-9][0-9]\):\([0-9][0-9]\)$/\1\2/')
-            FIVE_H_EPOCH=$(date -j -f "%Y-%m-%dT%H:%M:%S%z" "$FIVE_H_RESET" "+%s" 2>/dev/null || echo "0")
-        fi
-        SEVEN_D_EPOCH="0"
-        if [ -n "$SEVEN_D_RESETS_AT" ]; then
-            SEVEN_D_RESET=$(echo "$SEVEN_D_RESETS_AT" | sed 's/\.[0-9]*//' | sed 's/\([-+][0-9][0-9]\):\([0-9][0-9]\)$/\1\2/')
-            SEVEN_D_EPOCH=$(date -j -f "%Y-%m-%dT%H:%M:%S%z" "$SEVEN_D_RESET" "+%s" 2>/dev/null || echo "0")
-        fi
-        echo "$FIVE_H $SEVEN_D $FIVE_H_EPOCH $SEVEN_D_EPOCH" > "$QUOTA_CACHE"
-    ) &
-fi
+    FIVE_COLOR=$(color_for_pct "$FIVE_H")
+    SEVEN_COLOR=$(color_for_pct "$SEVEN_D")
 
-# キャッシュから読み取り、3-4行目を出力
-if [ -f "$QUOTA_CACHE" ]; then
-    read -r FIVE_H SEVEN_D FIVE_H_EPOCH SEVEN_D_EPOCH < "$QUOTA_CACHE"
-    if [ -n "$FIVE_H" ] && [ -n "$SEVEN_D" ]; then
-        FIVE_H_INT=$(printf "%.0f" "$FIVE_H")
-        SEVEN_D_INT=$(printf "%.0f" "$SEVEN_D")
+    FIVE_BAR=$(make_bar "$FIVE_H")
+    SEVEN_BAR=$(make_bar "$SEVEN_D")
 
-        FIVE_COLOR=$(color_for_pct "$FIVE_H_INT")
-        SEVEN_COLOR=$(color_for_pct "$SEVEN_D_INT")
+    FIVE_RESET_STR=$(format_reset_time "$FIVE_H_EPOCH")
+    SEVEN_RESET_STR=$(format_reset_time "$SEVEN_D_EPOCH")
 
-        FIVE_BAR=$(make_bar "$FIVE_H_INT")
-        SEVEN_BAR=$(make_bar "$SEVEN_D_INT")
+    FIVE_RESET_PART="  ${DIM}reset ${FIVE_RESET_STR:--}${RESET}"
+    SEVEN_RESET_PART="  ${DIM}reset ${SEVEN_RESET_STR:--}${RESET}"
 
-        FIVE_RESET_STR=$(format_reset_time "$FIVE_H_EPOCH")
-        SEVEN_RESET_STR=$(format_reset_time "$SEVEN_D_EPOCH")
+    FIVE_PCT=$(printf "%3d" "$FIVE_H")
+    SEVEN_PCT=$(printf "%3d" "$SEVEN_D")
 
-        FIVE_RESET_PART="  ${DIM}reset ${FIVE_RESET_STR:--}${RESET}"
-        SEVEN_RESET_PART="  ${DIM}reset ${SEVEN_RESET_STR:--}${RESET}"
-
-        FIVE_PCT=$(printf "%3d" "$FIVE_H_INT")
-        SEVEN_PCT=$(printf "%3d" "$SEVEN_D_INT")
-
-        echo -e "5h  ${FIVE_COLOR}${FIVE_BAR} ${FIVE_PCT}%${RESET}${FIVE_RESET_PART}"
-        echo -e "7d  ${SEVEN_COLOR}${SEVEN_BAR} ${SEVEN_PCT}%${RESET}${SEVEN_RESET_PART}"
-    fi
+    echo -e "5h  ${FIVE_COLOR}${FIVE_BAR} ${FIVE_PCT}%${RESET}${FIVE_RESET_PART}"
+    echo -e "7d  ${SEVEN_COLOR}${SEVEN_BAR} ${SEVEN_PCT}%${RESET}${SEVEN_RESET_PART}"
 fi

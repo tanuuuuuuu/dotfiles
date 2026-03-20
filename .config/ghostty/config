@@ -13,8 +13,8 @@ theme = GitHub Dark
 confirm-close-surface = false
 
 # 内側パディング（ピクセル）
-window-padding-x = 24
-window-padding-y = 24
+window-padding-x = 16
+window-padding-y = 16
 
 # パディングを自動調整してコンテンツを中央配置
 window-padding-balance = true
