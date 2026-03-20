@@ -38,12 +38,14 @@ nvim/
 │       ├── astrolsp.lua    # LSP 設定（未使用）
 │       ├── astroui.lua     # UI 設定（カラースキーム、透明化）
 │       ├── bufferline.lua  # バッファタブ表示
-│       ├── gitsigns.lua    # Git 差分・blame 表示
+│       ├── gitsigns.lua    # Git 差分・blame 表示・hunk ナビゲーション
 │       ├── iceberg.lua     # カラースキーム追加
 │       ├── im-select.lua   # IME 自動切替
+│       ├── image.lua       # 画像プレビュー
 │       ├── lualine.lua     # ステータスライン（モード表示）
 │       ├── mason.lua       # LSP/ツール管理（未使用）
 │       ├── neo-tree.lua    # ファイルツリー
+│       ├── neominimap.lua  # ミニマップ（コード縮小表示）
 │       ├── none-ls.lua     # フォーマッタ/リンター（未使用）
 │       ├── table-mode.lua  # Markdown テーブル自動整形
 │       ├── treesitter.lua  # シンタックスハイライト（未使用）
@@ -79,11 +81,13 @@ nvim/
 
 | プラグイン | 種別 | 設定内容 | 理由 |
 |------------|------|----------|------|
-| gitsigns | 標準 | インライン blame 表示 | 各行の変更者・日時を即座に確認できる（GitLens 風） |
+| gitsigns | 標準 | インライン blame 表示、hunk ナビゲーション | 各行の変更者・日時を即座に確認でき、変更箇所間をジャンプできる |
 | Neo-tree | 標準 | 起動時に自動フォーカス | IDE 風にファイルツリーをすぐ使えるようにするため |
 | bufferline | 追加 | バッファをタブ風に表示 | 複数ファイル編集時にバッファを視覚的に管理しやすくするため |
-| im-select | 追加 | Insert モードを抜けたとき IME を英語に切替 | Normal モードに戻ったとき日本語入力が残る問題を解消 |
+| im-select | 追加 | Insert/Cmdline モードを抜けたとき IME を英語に切替 | Normal モードに戻ったとき日本語入力が残る問題を解消 |
+| image | 追加 | バッファ内で画像プレビュー | png/jpg/svg 等の画像をエディタ内で直接表示 |
 | lualine | 追加 | モード表示付きステータスライン | 現在のモード（Normal/Insert/Visual 等）を色付きで表示 |
+| neominimap | 追加 | コード縮小表示のミニマップ | ファイル全体の構造を俯瞰し、Git 変更・診断・検索結果を表示 |
 | vim-table-mode | 追加 | Markdown テーブル自動整形 | 保存時にテーブルの列幅を自動で揃える |
 
 > [!NOTE]
@@ -135,6 +139,13 @@ AstroNvim のコア機能をカスタマイズ。
 | `delay` | 300ms | 表示までの遅延 |
 | フォーマット | `<author>, <date> - <summary>` | 作者、日付、コミットメッセージを表示 |
 
+**キーマップ**:
+
+| キー | 説明 |
+|------|------|
+| `gh` | 次の Git 変更箇所（hunk）へ移動 |
+| `gH` | 前の Git 変更箇所（hunk）へ移動 |
+
 ### iceberg.lua - カラースキーム
 
 追加のカラースキームを遅延読み込みで登録。
@@ -154,10 +165,32 @@ AstroNvim のコア機能をカスタマイズ。
 |------|-----|------|
 | `default_im_select` | com.apple.keylayout.ABC | 英語キーボード |
 | `default_command` | macism | macOS 用 IME 切替コマンド |
-| 切替タイミング | InsertLeave, FocusGained | Insert モードを抜けたとき、ウィンドウにフォーカスが戻ったとき |
+| 切替タイミング | InsertLeave, CmdlineLeave, FocusGained | Insert/Cmdline モードを抜けたとき、ウィンドウにフォーカスが戻ったとき |
 
 > [!NOTE]
 > `macism` コマンドが必要。`brew install macism` でインストール。
+
+### neominimap.lua - ミニマップ
+
+[neominimap.nvim](https://github.com/Isrothy/neominimap.nvim) でコードの縮小表示（ミニマップ）を表示。VS Code のミニマップに相当する機能。
+
+| 設定 | 値 | 説明 |
+|------|-----|------|
+| `layout` | float | 各ウィンドウにフローティングで表示 |
+| `minimap_width` | 10 | ミニマップの表示幅 |
+| `current_line_position` | percent | ファイル全体に対する相対位置でスクロール |
+
+**表示される情報**: コード構造（Treesitter）、Git 変更箇所（gitsigns 連携）、診断情報（LSP）、検索結果
+
+### image.lua - 画像プレビュー
+
+[image.nvim](https://github.com/3rd/image.nvim) でエディタ内に画像をプレビュー表示。
+
+| 設定 | 値 | 説明 |
+|------|-----|------|
+| バックエンド | kitty | Kitty グラフィックスプロトコル |
+| 対応形式 | png, jpg, gif, webp, svg 等 | 主要な画像形式に対応 |
+| `<Leader>ui` | ImageToggle | プレビューの表示/非表示を切り替え |
 
 ### neo-tree.lua - ファイルツリー
 
