@@ -8,5 +8,13 @@ return {
       delay = 300, -- 表示までの遅延(ms)
     },
     current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
+    on_attach = function(bufnr)
+      local gs = require("gitsigns")
+      local map = function(mode, l, r, desc)
+        vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
+      end
+      map("n", "gh", function() gs.next_hunk() end, "Next git hunk")
+      map("n", "gH", function() gs.prev_hunk() end, "Prev git hunk")
+    end,
   },
 }
