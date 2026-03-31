@@ -42,14 +42,18 @@ make_bar() {
     echo "$bar"
 }
 
-# epoch → JST のリセット時刻文字列
-format_reset_time() {
+# epoch → JST のリセット時刻文字列 (5h用: H:MM)
+format_reset_hm() {
     local epoch=$1
-    if [ -z "$epoch" ] || [ "$epoch" = "0" ]; then
-        echo ""
-        return
-    fi
-    TZ=Asia/Tokyo date -j -f "%s" "$epoch" "+%-m/%-d %-H:%M" 2>/dev/null || echo ""
+    if [ -z "$epoch" ] || [ "$epoch" = "0" ] || [ "$epoch" = "null" ]; then echo ""; return; fi
+    TZ=Asia/Tokyo date -j -f "%s" "$epoch" "+%-H:%M" 2>/dev/null || echo ""
+}
+
+# epoch → JST のリセット時刻文字列 (7d用: m/d)
+format_reset_md() {
+    local epoch=$1
+    if [ -z "$epoch" ] || [ "$epoch" = "0" ] || [ "$epoch" = "null" ]; then echo ""; return; fi
+    TZ=Asia/Tokyo date -j -f "%s" "$epoch" "+%-m/%-d" 2>/dev/null || echo ""
 }
 
 # --- 1行目: ディレクトリ (ブランチ) ---
@@ -86,6 +90,9 @@ CTX_PART="ctx ${CTX_BAR} ${CTX_COLOR}${CTX_PCT}%${RESET}"
 FIVE_H=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' | cut -d. -f1)
 SEVEN_D=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty' | cut -d. -f1)
 
+FIVE_H_RESETS=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
+SEVEN_D_RESETS=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
+
 if [ -n "$FIVE_H" ] && [ -n "$SEVEN_D" ]; then
     FIVE_COLOR=$(color_for_pct "$FIVE_H")
     SEVEN_COLOR=$(color_for_pct "$SEVEN_D")
@@ -93,10 +100,15 @@ if [ -n "$FIVE_H" ] && [ -n "$SEVEN_D" ]; then
     FIVE_BAR=$(make_bar "$FIVE_H" "$FIVE_COLOR")
     SEVEN_BAR=$(make_bar "$SEVEN_D" "$SEVEN_COLOR")
 
-    FIVE_PCT="${FIVE_H}"
-    SEVEN_PCT="${SEVEN_D}"
+    FIVE_RESET=$(format_reset_hm "$FIVE_H_RESETS")
+    SEVEN_RESET=$(format_reset_md "$SEVEN_D_RESETS")
 
-    echo -e "${CTX_PART} ${DIM}|${RESET} 5h ${FIVE_BAR} ${FIVE_COLOR}${FIVE_PCT}%${RESET} ${DIM}|${RESET} 7d ${SEVEN_BAR} ${SEVEN_COLOR}${SEVEN_PCT}%${RESET}"
+    FIVE_RESET_PART=""
+    [ -n "$FIVE_RESET" ] && FIVE_RESET_PART=" ${DIM}↻${FIVE_RESET}${RESET}"
+    SEVEN_RESET_PART=""
+    [ -n "$SEVEN_RESET" ] && SEVEN_RESET_PART=" ${DIM}↻${SEVEN_RESET}${RESET}"
+
+    echo -e "${CTX_PART} ${DIM}|${RESET} 5h ${FIVE_BAR} ${FIVE_COLOR}${FIVE_H}%${RESET}${FIVE_RESET_PART} ${DIM}|${RESET} 7d ${SEVEN_BAR} ${SEVEN_COLOR}${SEVEN_D}%${RESET}${SEVEN_RESET_PART}"
 else
     echo -e "${CTX_PART}"
 fi
