@@ -56,7 +56,8 @@
     "deny": [
       "Bash(rm *)",
       "Bash(rmdir *)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "hooks": {
     "Stop": [
@@ -84,5 +85,6 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "skipAutoPermissionPrompt": true
 }
