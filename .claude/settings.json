@@ -50,8 +50,7 @@
       "Bash(which:*)",
       "Read",
       "WebFetch",
-      "WebSearch",
-      "mcp__voicevox__speak"
+      "WebSearch"
     ],
     "deny": [
       "Bash(rm *)",
@@ -66,6 +65,10 @@
           {
             "type": "command",
             "command": "open -a Ghostty"
+          },
+          {
+            "type": "command",
+            "command": "afplay ~/.claude/sounds/complete.wav"
           }
         ]
       }
@@ -76,6 +79,10 @@
           {
             "type": "command",
             "command": "open -a Ghostty"
+          },
+          {
+            "type": "command",
+            "command": "afplay ~/.claude/sounds/confirm.wav"
           }
         ]
       }
