@@ -67,6 +67,7 @@ setopt correct
 # エイリアス
 # ==================================================
 alias vim='nvim'
+alias repo='nocorrect cd $(ghq root)/$(ghq list | fzf)'
 
 # ==================================================
 # カスタム関数
@@ -85,3 +86,10 @@ ztmp() {
 if [[ -o interactive ]] && [[ -z "$ZELLIJ" ]] && { [[ "$TERM" == "xterm-ghostty" ]] || [[ -n "$WSL_DISTRO_NAME" ]]; }; then
   zellij
 fi
+
+# bun completions
+[ -s "/Users/kokubutakuya/.bun/_bun" ] && source "/Users/kokubutakuya/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
