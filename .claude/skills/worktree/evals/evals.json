@@ -1,0 +1,26 @@
+{
+  "skill_name": "worktree",
+  "evals": [
+    {
+      "id": 0,
+      "name": "create-worktree-for-parallel-work",
+      "prompt": "今 PR レビュー中なんだけど、別件で dbt のモデル修正もやりたい。並行で作業できるようにして",
+      "expected_output": "新しい worktree を作成し、Cursor で開くコマンドを案内する。命名規約 ../<repo>-<branch> に従う。",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "list-worktrees",
+      "prompt": "今ある worktree 何があったっけ？整理したいから状況見せて",
+      "expected_output": "git worktree list を実行し、各 worktree のブランチと最新コミットを分かりやすく解釈して提示する",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "cleanup-merged-worktrees",
+      "prompt": "使わなくなった worktree 消したい。マージ済みのやつ全部整理して",
+      "expected_output": "マージ済み判定 → ユーザー確認 → git worktree remove → 残ったディレクトリは trash で削除（rm を使わない）",
+      "files": []
+    }
+  ]
+}
