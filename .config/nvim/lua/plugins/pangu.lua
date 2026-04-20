@@ -19,8 +19,13 @@ return {
             for i, line in ipairs(lines) do
               if line:match("^```") then
                 in_code_block = not in_code_block
-              elseif not in_code_block then
-                local new_line = line
+              elseif not in_code_block and not line:match("^# ") then
+                -- [[...]] を一時プレースホルダに退避（Obsidian 内部リンクはそのまま残す）
+                local links = {}
+                local new_line = line:gsub("%[%[(.-)%]%]", function(content)
+                  table.insert(links, "[[" .. content .. "]]")
+                  return "\001LINK" .. #links .. "\001"
+                end)
                 -- CJK の直後に英数字 → 間にスペース挿入
                 new_line = vim.fn.substitute(new_line,
                   [[\([一-龥ぁ-んァ-ヶー々〇]\)\([a-zA-Z0-9]\)]],
@@ -37,6 +42,10 @@ return {
                 new_line = vim.fn.substitute(new_line,
                   [[\(`\)\([一-龥ぁ-んァ-ヶー々〇]\)]],
                   [[\1 \2]], "g")
+                -- プレースホルダを元の [[...]] に復元
+                new_line = new_line:gsub("\001LINK(%d+)\001", function(idx)
+                  return links[tonumber(idx)]
+                end)
                 if new_line ~= line then
                   vim.api.nvim_buf_set_lines(0, i - 1, i, false, { new_line })
                 end
