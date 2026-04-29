@@ -23,3 +23,9 @@ export PATH="$HOME/.local/bin:$PATH"
 if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then
   . "$HOME/google-cloud-sdk/path.zsh.inc"
 fi
+
+# ==================================================
+# Claude Code
+# ==================================================
+# フルスクリーン (代替スクリーンバッファ) モードでちらつき防止
+export CLAUDE_CODE_NO_FLICKER=1
