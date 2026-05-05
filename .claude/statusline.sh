@@ -31,8 +31,9 @@ make_bar() {
     [ "$filled" -gt 10 ] && filled=10
     local empty=$((10 - filled))
     local bar=""
-    [ "$filled" -gt 0 ] && bar=$(printf "%${filled}s" | tr ' ' '■')
-    [ "$empty" -gt 0 ] && bar="${bar}$(printf "%${empty}s" | tr ' ' '□')"
+    local i
+    for ((i = 0; i < filled; i++)); do bar="${bar}■"; done
+    for ((i = 0; i < empty; i++)); do bar="${bar}□"; done
     echo "$bar"
 }
 

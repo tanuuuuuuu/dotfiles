@@ -58,7 +58,8 @@
     "deny": [
       "Bash(rm *)",
       "Bash(rmdir *)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "enableAllProjectMcpServers": false,
   "hooks": {
@@ -89,5 +90,8 @@
   },
   "enabledPlugins": {
     "discord@claude-plugins-official": true
-  }
+  },
+  "effortLevel": "medium",
+  "skipAutoPermissionPrompt": true,
+  "theme": "dark-daltonized"
 }

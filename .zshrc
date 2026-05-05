@@ -83,9 +83,9 @@ ztmp() {
 # ==================================================
 # Zellij自動起動（Ghostty または WSL 使用時）
 # ==================================================
-if [[ -o interactive ]] && [[ -z "$ZELLIJ" ]] && { [[ "$TERM" == "xterm-ghostty" ]] || [[ -n "$WSL_DISTRO_NAME" ]]; }; then
-  zellij
-fi
+# if [[ -o interactive ]] && [[ -z "$ZELLIJ" ]] && { [[ "$TERM" == "xterm-ghostty" ]] || [[ -n "$WSL_DISTRO_NAME" ]]; }; then
+#   zellij
+# fi
 
 # bun completions
 [ -s "/Users/kokubutakuya/.bun/_bun" ] && source "/Users/kokubutakuya/.bun/_bun"
