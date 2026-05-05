@@ -160,12 +160,33 @@ tmux new -s dev
 
 ```
 ~/dotfiles/.config/tmux/
-  ├ tmux.conf      ← 本体
-  └ README.md      ← このファイル
+  ├ tmux.conf              ← 本体
+  ├ scripts/
+  │   └ dev-layout.sh      ← 5 タブ自動展開スクリプト
+  └ README.md              ← このファイル
 
 ~/.config/tmux/
-  └ tmux.conf      ← ↑ への symlink（setup.sh が作成）
+  ├ tmux.conf              ← ↑ への symlink（setup.sh が作成）
+  └ plugins/               ← TPM が管理（resurrect / continuum / sensible 等）
 ```
+
+## dev session 自動展開
+
+Ghostty 起動時に `dev` という名前の tmux session が以下の 5 タブ構成で自動的に立ち上がる。
+スクリプト本体は `scripts/dev-layout.sh`、呼び出しは `.zshrc` の自動起動ブロック。
+
+| タブ名 | 作業ディレクトリ | 構成 |
+|--------|-----------------|------|
+| `dotfiles` | `~/dotfiles` | nvim 65% + claude 35%（direnv 環境引き継ぎ） |
+| `memory` | `~/repos/kubutaku-memory` | 同上 |
+| `polaris` | `~/repos/polaris` | 同上 |
+| `life` | `~/repos/life-dashboard` | 同上 |
+| `repos` | `~/repos` | シェルのみ（フォーカス） |
+
+存在しないディレクトリは自動スキップ（stderr に warn）。タブを増減したいときは `dev-layout.sh` 内の
+`TAB_NAMES` / `TAB_DIRS` / `TAB_MODES` 配列を編集する。
+
+`continuum` が前回の状態を復元できる場合は復元が優先され、`dev-layout.sh` は何もせず attach する。
 
 ## トラブルシュート
 

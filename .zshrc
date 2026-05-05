@@ -97,12 +97,13 @@ dotup() {
 
 # ==================================================
 # tmux 自動起動（Ghostty または WSL 使用時、cmux 内・既に tmux 内なら除外）
+# dev session を 5 タブ構成で展開（既存 session があれば attach のみ）
 # ==================================================
 if [[ -o interactive ]] \
    && [[ -z "$TMUX" ]] \
    && [[ -z "$CMUX_WORKSPACE_ID" ]] \
    && { [[ "$TERM" == "xterm-ghostty" ]] || [[ -n "$WSL_DISTRO_NAME" ]]; }; then
-  tmux attach || tmux new-session
+  ~/dotfiles/.config/tmux/scripts/dev-layout.sh
 fi
 
 # bun completions

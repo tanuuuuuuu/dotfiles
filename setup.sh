@@ -211,6 +211,20 @@ ln -sf "$DOTFILES_DIR/.config/uv/uv.toml" ~/.config/uv/uv.toml
 mkdir -p ~/.config/tmux
 ln -sf "$DOTFILES_DIR/.config/tmux/tmux.conf" ~/.config/tmux/tmux.conf
 
+# tmux plugin manager (TPM) を XDG 準拠で導入（未 clone の場合のみ）
+# tmux.conf を ~/.config/tmux/ に置く場合、TPM は自動で
+# TMUX_PLUGIN_MANAGER_PATH=~/.config/tmux/plugins/ を採用するためここに合わせる
+mkdir -p ~/.config/tmux/plugins
+if [ ! -d ~/.config/tmux/plugins/tpm ]; then
+    git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
+fi
+
+# tmux プラグインを一括インストール（tmux.conf の @plugin 行を解釈）
+# install_plugins はスタンドアロン実行向けに TMUX_PLUGIN_MANAGER_PATH を明示する
+if [ -x ~/.config/tmux/plugins/tpm/bin/install_plugins ]; then
+    TMUX_PLUGIN_MANAGER_PATH="$HOME/.config/tmux/plugins/" ~/.config/tmux/plugins/tpm/bin/install_plugins
+fi
+
 # macOS 専用の設定リンク
 if [[ "$OS" == "Darwin" ]]; then
     mkdir -p ~/.config/ghostty
