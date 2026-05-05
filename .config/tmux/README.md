@@ -55,9 +55,13 @@
 | window 切替（次） | `prefix n` |
 | window 切替（前） | `prefix p` |
 | window 直接指定 | `prefix 1〜9` |
+| **直前の window に戻る** | `prefix Tab` |
 | window 名変更 | `prefix ,` |
 | window 閉じる | `prefix &` |
 | window 一覧から選択 | `prefix w` |
+
+注: tmux デフォルトの「直前 window」は `prefix l` だが、ここでは `prefix l` を vim 流の
+「右 pane へ移動（select-pane -R）」に上書きしているため `prefix Tab` に逃がしている。
 
 #### session 操作（detach / attach）
 
