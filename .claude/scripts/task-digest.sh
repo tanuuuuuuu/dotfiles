@@ -202,6 +202,7 @@ for issue in issues:
     updated = datetime.fromisoformat(issue['updatedAt'].replace('Z', '+00:00')).astimezone(JST).date()
     days_since_update = days_diff(today, updated)
 
+    created = datetime.fromisoformat(issue['createdAt'].replace('Z', '+00:00'))
     enriched = {
         **issue,
         '_deadline': deadline,
@@ -209,6 +210,7 @@ for issue in issues:
         '_summary': summary,
         '_days_since_update': days_since_update,
         '_updated': updated,
+        '_created': created,
     }
 
     if deadline and deadline < today:
@@ -223,9 +225,8 @@ for issue in issues:
         categories['other'].append(enriched)
 
 def sort_key(i):
-    d = i['_deadline'].toordinal() if i['_deadline'] else 9999999
-    upd = -i['_updated'].toordinal()
-    return (d, upd, -i['number'])
+    # 作成日時の降順（新しい issue が上）
+    return -i['_created'].timestamp()
 
 for k in categories:
     categories[k].sort(key=sort_key)
