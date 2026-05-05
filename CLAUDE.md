@@ -41,6 +41,7 @@ macOS / Windows (WSL Ubuntu) 対応の個人設定ファイル管理リポジト
 - `Brewfile.linux` - Linux 専用パッケージ
 - `.config/` - 各種ツールの設定
 - `.claude/` - Claude Code の設定（スキル含む）
+- `.codex/` - Codex CLI のグローバル設定（AGENTS.md）
 - `setup.sh` - 初期セットアップスクリプト（macOS/WSL共通）
 
 ### macOS 専用

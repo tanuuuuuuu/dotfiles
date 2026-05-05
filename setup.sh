@@ -255,6 +255,10 @@ if [ -d ~/.claude/skills ] && [ ! -L ~/.claude/skills ]; then
 fi
 ln -sfn "$DOTFILES_DIR/.claude/skills" ~/.claude/skills
 
+# Codex CLI グローバル設定
+mkdir -p ~/.codex
+ln -sf "$DOTFILES_DIR/.codex/AGENTS.md" ~/.codex/AGENTS.md
+
 # サウンドファイルは macOS のみ使用（afplay コマンド）
 if [[ "$OS" == "Darwin" ]]; then
     ln -sf "$DOTFILES_DIR/.claude/sounds/complete_girl.wav" ~/.claude/sounds/complete_girl.wav
