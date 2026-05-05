@@ -71,6 +71,31 @@ alias repo='nocorrect cd $(ghq root)/$(ghq list | fzf)'
 alias cm='cmux'
 
 # ==================================================
+# カスタム関数
+# ==================================================
+# dotfiles を pull → setup.sh → Brewfile から消えたパッケージを警告表示
+# Usage: dotup
+dotup() {
+  local DOTDIR="$HOME/dotfiles"
+  (
+    cd "$DOTDIR" || return 1
+    git pull --ff-only || { echo "[dotup] git pull failed" >&2; return 1; }
+    ./setup.sh || { echo "[dotup] setup.sh failed" >&2; return 1; }
+  ) || return 1
+
+  echo ""
+  echo "=== Brewfile から削除されたパッケージのチェック ==="
+  brew bundle cleanup --file="$DOTDIR/Brewfile"
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    brew bundle cleanup --file="$DOTDIR/Brewfile.macos" 2>/dev/null
+  else
+    brew bundle cleanup --file="$DOTDIR/Brewfile.linux" 2>/dev/null
+  fi
+  echo ""
+  echo "削除する場合: brew bundle cleanup --file=<上記の Brewfile> --force"
+}
+
+# ==================================================
 # tmux 自動起動（Ghostty または WSL 使用時、cmux 内・既に tmux 内なら除外）
 # ==================================================
 if [[ -o interactive ]] \

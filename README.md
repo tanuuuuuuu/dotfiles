@@ -166,7 +166,7 @@ Windows Terminal の設定ファイルを適用する場合:
 
 | コマンド | 説明 |
 |----------|------|
-| `ztmp [dir]` | 指定ディレクトリで Nvim + Claude Code の Zellij タブを開く（省略時はカレントディレクトリ） |
+| `dotup` | dotfiles を最新化（`git pull` → `setup.sh` 実行）し、Brewfile から削除されたパッケージを警告表示する |
 
 ## macOS システム設定
 
