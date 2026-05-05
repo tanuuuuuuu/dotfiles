@@ -27,11 +27,13 @@ TAB_DIRS=(
 )
 TAB_MODES=("dev" "dev" "dev" "dev" "shell")
 
-# nvim 左 + claude 右（35%）の dev レイアウトを構築
+# nvim 左 + claude 右（45%）の dev レイアウトを構築
+# nvim は引数なしで起動。AstroNvim のダッシュボード（ロゴ + 最近開いたファイル）が出る。
+# ファイルツリーが必要なら Space e で neo-tree を開く（trade-off: 起動時はシンプルに）
 setup_dev_pane() {
     local target="$1" dir="$2"
     tmux send-keys -t "$target" "nvim" Enter
-    tmux split-window -h -p 35 -t "$target" -c "$dir"
+    tmux split-window -h -p 45 -t "$target" -c "$dir"
     tmux send-keys -t "$target" 'eval "$(direnv export zsh 2>/dev/null)" && exec claude' Enter
     # 左の nvim pane に戻る（pane-base-index に依存しないよう -L で相対指定）
     tmux select-pane -t "$target" -L

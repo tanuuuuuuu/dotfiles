@@ -181,7 +181,7 @@ Ghostty 起動時に `dev` という名前の tmux session が以下の 5 タブ
 
 | タブ名 | 作業ディレクトリ | 構成 |
 |--------|-----------------|------|
-| `dotfiles` | `~/dotfiles` | nvim 65% + claude 35%（direnv 環境引き継ぎ） |
+| `dotfiles` | `~/dotfiles` | nvim 55% + claude 45%（direnv 環境引き継ぎ） |
 | `memory` | `~/repos/kubutaku-memory` | 同上 |
 | `polaris` | `~/repos/polaris` | 同上 |
 | `life` | `~/repos/life-dashboard` | 同上 |
