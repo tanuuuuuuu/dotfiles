@@ -68,24 +68,17 @@ setopt correct
 # ==================================================
 alias vim='nvim'
 alias repo='nocorrect cd $(ghq root)/$(ghq list | fzf)'
+alias cm='cmux'
 
 # ==================================================
-# カスタム関数
+# tmux 自動起動（Ghostty または WSL 使用時、cmux 内・既に tmux 内なら除外）
 # ==================================================
-# 指定ディレクトリで Nvim + Claude Code の Zellij タブを開く
-# Usage: ztmp [dir]  (省略時はカレントディレクトリ)
-ztmp() {
-  local dir="${1:-.}"
-  local name="$(realpath "$dir" | sed "s|^$HOME|~|")"
-  zellij action new-tab --layout ~/.config/zellij/layouts/tmp.kdl --cwd "$dir" --name "$name"
-}
-
-# ==================================================
-# Zellij自動起動（Ghostty または WSL 使用時）
-# ==================================================
-# if [[ -o interactive ]] && [[ -z "$ZELLIJ" ]] && { [[ "$TERM" == "xterm-ghostty" ]] || [[ -n "$WSL_DISTRO_NAME" ]]; }; then
-#   zellij
-# fi
+if [[ -o interactive ]] \
+   && [[ -z "$TMUX" ]] \
+   && [[ -z "$CMUX_WORKSPACE_ID" ]] \
+   && { [[ "$TERM" == "xterm-ghostty" ]] || [[ -n "$WSL_DISTRO_NAME" ]]; }; then
+  tmux attach || tmux new-session
+fi
 
 # bun completions
 [ -s "/Users/kokubutakuya/.bun/_bun" ] && source "/Users/kokubutakuya/.bun/_bun"
