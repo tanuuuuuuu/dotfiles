@@ -1,90 +1,68 @@
 ---
 name: create-issue
-description: GitHub Issue を作成。担当者を設定し、Issue Type と Project を可能なら自動設定。「/create-issue」「イシューを作成」「Issue を立てて」「新しいタスクを作りたい」で使用。
+description: GitHub Issue を作成。Issue Template があればそれに従い、Issue Type や Project の設定機能があれば自動連携する。「/create-issue」「イシューを作成」「Issue を立てて」「新しいタスクを作りたい」で使用。
 ---
 
 # create-issue
 
-GitHub Issue を作成する。リポジトリの設定（Issue Template / Issue Type / Project）に応じて段階的に対応し、無ければスキップする graceful degradation 方式。
+GitHub Issue を作成する。コアは `gh issue create` 一発のシンプルな処理。リポジトリ固有の設定（Issue Template / Issue Type / Project）が存在する場合のみ追加で連携する graceful degradation 方式。
 
 ## ワークフロー
 
-1. **リポジトリ確認**: `gh repo view --json nameWithOwner,defaultBranchRef` で現在のリポジトリを確認
-2. **スコープ確認**: `gh auth status` で `project` スコープの有無を確認
-3. **Issue Template 確認**: `.github/ISSUE_TEMPLATE/` の存在をチェック、あればその構造に沿う
-4. **情報収集**: タイトル、本文、担当者をユーザーに確認
-5. **Issue 作成**: `gh issue create` で Issue を作成
-6. **Issue Type 自動設定**（リポジトリで Issue Type が定義されていれば）: 内容から判定し GraphQL で設定
-7. **Project ステータス設定**（project スコープがあれば）: ユーザーに Todo / In Progress を選ばせて設定
-8. **完了メッセージ**: Issue URL と設定内容を表示
+1. **情報収集**: タイトル・本文・担当者をユーザーに確認
+2. **Issue 作成**: `gh issue create` で作成
+3. **応用設定（任意）**: リポジトリで Issue Type や Project が使われている場合のみ追加設定
 
-## 1. リポジトリとスコープの確認
+ほとんどの個人リポジトリは 1 と 2 だけで完結する。3 は機能を使っているチーム/組織リポジトリ向け。
 
-```bash
-gh repo view --json nameWithOwner -q .nameWithOwner
-gh auth status 2>&1 | grep -q "'project'" && echo "HAS_PROJECT_SCOPE" || echo "NO_PROJECT_SCOPE"
-```
+## 1. 情報収集
 
-- `HAS_PROJECT_SCOPE`: `--project` オプションを使用可能
-- `NO_PROJECT_SCOPE`: `--project` を使うと認証エラーになるため省略する
+ユーザーに確認する内容:
 
-## 2. Issue Template の確認
+- **タイトル**: 動詞始まりで具体的に。「○○ を追加する」「○○ のバグを修正する」「○○ を調査する」
+- **本文**: 下記の判断フローで生成し、ユーザーに draft を見せて確認
+- **担当者**: デフォルト `@me`（自分）。変更する場合のみコラボレーターから選択
+
+### 本文の生成
 
 ```bash
 ls .github/ISSUE_TEMPLATE/ 2>/dev/null
 ```
 
-- `.yml` / `.yaml` / `.md` テンプレートがあれば、その構造に沿って本文を生成する
-- 無ければ標準的な構造で本文を生成: **背景 / やること / 完了条件**
+- **テンプレートあり**（`.yml` / `.yaml` / `.md`）: そのセクション構造に沿って本文を生成
+- **テンプレートなし**: 簡素な構造で生成。デフォルトは「**やりたいこと / 背景・理由 / 完了条件**」だが、内容に応じて柔軟に省略・追加してよい。短いタスクなら 1〜2 行のフリーテキストでも可
 
-## 3. 情報収集
-
-ユーザーに以下を確認:
-
-- **タイトル**: 動詞始まりで具体的に。例: 「○○ を追加する」「○○ のバグを修正する」「○○ を調査する」
-- **本文**: 既存テンプレートに沿うか、無ければ「背景 / やること / 完了条件」セクションで生成。ユーザーに draft を見せて確認を取る
-- **担当者**: デフォルトは `@me`。変更する場合のみコラボレーター一覧を提示
-
-担当者を変える場合のコラボレーター取得:
+### 担当者を変更する場合
 
 ```bash
 gh api repos/:owner/:repo/collaborators --jq '.[].login'
 ```
 
-## 4. Issue 作成
+## 2. Issue 作成
 
-### project スコープがあり、リポジトリに Project がリンクされている場合
-
-リポジトリにリンクされた Project 名を確認:
+最小コマンド:
 
 ```bash
-gh project list --owner OWNER 2>&1 | head -20
+gh issue create --title "タイトル" --body "本文" --assignee "@me"
 ```
 
-ユーザーに対象 Project 名を確認した上で:
+Project にも追加したい場合は、後述の §応用設定 を先に確認してから `--project` を付与する。
 
-```bash
-gh issue create \
-  --title "タイトル" \
-  --body "本文" \
-  --assignee "@me" \
-  --project "PROJECT_NAME"
+```
+Issue を作成しました: <Issue URL>
 ```
 
-### project スコープがない / Project を使わない場合
+ここで終わってよい。応用設定は必要なら続ける。
 
-```bash
-gh issue create \
-  --title "タイトル" \
-  --body "本文" \
-  --assignee "@me"
-```
+---
 
-## 5. Issue Type 自動設定（オプショナル）
+## 応用設定（リポジトリで使っている場合のみ）
 
-リポジトリで Issue Type が定義されている場合のみ実行する。定義されていなければ静かにスキップ。
+Issue Type と Project は **GitHub の組織・有料プラン中心の機能**であることが多く、個人 free アカウントの単独リポジトリではほとんど使われない。下記は使っているリポジトリ向けの追加処理。
 
-### 5.1. Issue Type 一覧の取得
+### A. Issue Type の自動設定
+
+Issue Type が定義されているか先に確認:
 
 ```bash
 gh api graphql -f query='{
@@ -96,29 +74,26 @@ gh api graphql -f query='{
 }'
 ```
 
-返ってきた `nodes` が空の場合はこの章をスキップ。
+`nodes` が空なら **このセクションをスキップ**。定義されている場合のみ続ける。
 
-### 5.2. Type の判定
+判定: 各 Type の `description` を基準にイシューの内容に最も合う Type を選ぶ。一般的な対応:
 
-各 Type の `description` を判定基準とし、Issue のタイトル・本文の内容に最も合う Type を選ぶ。一般的には:
+- Feature / Enhancement → 機能追加
+- Bug / Fix → バグ修正
+- Task / Chore → 雑務、設定
+- Documentation → ドキュメント
 
-- **Feature / Enhancement**: 機能追加、改善
-- **Bug / Fix**: バグ修正
-- **Task / Chore**: 雑務、設定変更、リファクタ
-- **Research / Investigation**: 調査、検証
-- **Documentation**: ドキュメント
-
-### 5.3. Issue の Node ID 取得 + Type 設定
+設定:
 
 ```bash
-# Issue の Node ID
+# Issue の Node ID を取得
 gh api graphql -f query='{
   repository(owner: "OWNER", name: "REPO") {
     issue(number: ISSUE_NUMBER) { id }
   }
 }'
 
-# Type 設定
+# Type を割り当て
 gh api graphql -f query='mutation {
   updateIssue(input: {
     id: "ISSUE_NODE_ID",
@@ -129,37 +104,40 @@ gh api graphql -f query='mutation {
 }'
 ```
 
-## 6. Project ステータス設定（オプショナル）
+### B. Project への追加とステータス設定
 
-project スコープがあり、Issue が Project に追加されている場合のみ実行する。
-
-### 6.1. ステータス選択
-
-ユーザーに選ばせる:
-
-- **Todo**: とりあえず立てておき後で着手
-- **In Progress**: これから取り掛かる
-
-### 6.2. Project Item ID と Project ID 取得
+トークンに `project` スコープが必要:
 
 ```bash
+gh auth status 2>&1 | grep -q "'project'" && echo "HAS" || echo "NO"
+```
+
+- `NO`: スキップ。`gh auth refresh -s project` でスコープ追加可能と案内
+- `HAS`: 続ける
+
+リポジトリにリンクされた Project を確認:
+
+```bash
+gh project list --owner OWNER 2>&1 | head -20
+```
+
+Issue 作成時から Project に追加する場合は、最初の `gh issue create` に `--project "PROJECT_NAME"` を加える。
+
+作成後にステータスを設定する場合（Todo / In Progress など）:
+
+```bash
+# Project Item ID と Project ID を取得
 gh api graphql -f query='{
   repository(owner: "OWNER", name: "REPO") {
     issue(number: ISSUE_NUMBER) {
       projectItems(first: 5) {
-        nodes {
-          id
-          project { id }
-        }
+        nodes { id project { id } }
       }
     }
   }
 }'
-```
 
-### 6.3. Status フィールド ID と Option ID 取得
-
-```bash
+# Status フィールドの ID と Option ID を取得
 gh api graphql -f query='{
   node(id: "PROJECT_ID") {
     ... on ProjectV2 {
@@ -172,11 +150,8 @@ gh api graphql -f query='{
     }
   }
 }'
-```
 
-### 6.4. ステータス設定
-
-```bash
+# ステータスを設定
 gh api graphql -f query='mutation {
   updateProjectV2ItemFieldValue(input: {
     projectId: "PROJECT_ID",
@@ -189,21 +164,16 @@ gh api graphql -f query='mutation {
 }'
 ```
 
-## 7. 完了メッセージ
+---
 
-実行できた項目だけ表示する。
+## 完了メッセージ
+
+実行できた項目だけ表示:
 
 ```
 Issue を作成しました: <Issue URL>
-- Type: <自動判定した Type>（設定された場合のみ）
-- Project ステータス: <選択したステータス>（設定された場合のみ）
-```
-
-スコープ不足等でスキップした項目があれば一行で補足:
-
-```
-⚠️ project スコープが無いため Project への追加はスキップしました。
-   `gh auth refresh -s project` でスコープを追加できます。
+- Type: <Type名>           （設定された場合のみ）
+- Project: <ステータス>    （設定された場合のみ）
 ```
 
 ## 関連スキル
