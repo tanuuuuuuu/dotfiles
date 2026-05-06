@@ -18,6 +18,7 @@ if (!requireNamespace("pak", quietly = TRUE)) {
 packages <- c(
   "renv",          # プロジェクトごとの依存固定
   "knitr",         # Quarto / R Markdown のコードチャンク実行エンジン
+  "rmarkdown",     # Quarto が HTML レンダリング時に内部で利用
   "languageserver" # Positron / VS Code の R LSP
 )
 
