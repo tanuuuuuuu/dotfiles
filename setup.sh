@@ -52,6 +52,13 @@ if command -v playwright &> /dev/null; then
 fi
 
 # ==================================================
+# R グローバルパッケージ
+# ==================================================
+if command -v R &> /dev/null; then
+    Rscript "$DOTFILES_DIR/.config/R/install-global-packages.R"
+fi
+
+# ==================================================
 # Claude Code
 # ==================================================
 if ! command -v claude &> /dev/null; then
