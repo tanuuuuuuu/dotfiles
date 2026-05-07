@@ -136,4 +136,13 @@ for script in "$DOTFILES_DIR"/bin/*; do
     [ -f "$script" ] && ln -sf "$script" ~/.local/bin/
 done
 
+# ==================================================
+# Positron CLI
+# ==================================================
+# Positron に同梱されている VS Code スタイルの CLI を PATH に通す
+# `positron <file>` / `positron <project-dir>` で起動できるようにする
+if [ -d "/Applications/Positron.app" ]; then
+    ln -sf "/Applications/Positron.app/Contents/Resources/app/bin/code" /opt/homebrew/bin/positron
+fi
+
 echo "Setup complete! Run 'source ~/.zshrc' to apply changes."

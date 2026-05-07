@@ -2,6 +2,7 @@ tap "laishulu/homebrew"
 
 brew "defaultbrowser"
 brew "direnv"
+brew "duti"        # macOS のファイル関連付け管理
 brew "fzf"
 brew "gh"
 brew "googleworkspace-cli"

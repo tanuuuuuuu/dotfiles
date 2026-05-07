@@ -212,6 +212,20 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write com.apple.TextEdit RichText -int 0
 
 # ==================================================
+# File Associations
+# ==================================================
+
+# .qmd (Quarto) を Positron で開く
+# Quarto は GUI アプリを提供せず .qmd の UTI を宣言するアプリが macOS に無いため、
+# duti では設定できず LSHandlers に直接書き込む必要がある。
+# -array-add は冪等でないため、既存エントリを確認してから追加する
+if ! defaults read com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers 2>/dev/null \
+    | grep -q 'LSHandlerContentTag = qmd'; then
+    defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers \
+        -array-add '{LSHandlerContentTag = "qmd"; LSHandlerContentTagClass = "public.filename-extension"; LSHandlerRoleAll = "co.posit.positron";}'
+fi
+
+# ==================================================
 # Apply changes
 # ==================================================
 
