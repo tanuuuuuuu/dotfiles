@@ -92,6 +92,7 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
+  "skipAutoPermissionPrompt": true,
   "voiceEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "agentPushNotifEnabled": true
 }
