@@ -36,6 +36,7 @@ macOS 用の個人設定ファイル管理リポジトリ。
 │   ├── ghostty/           # ターミナル設定
 │   ├── nvim/              # Neovim 設定
 │   ├── mise/              # ランタイム管理設定
+│   ├── positron/          # Positron 設定（macOS 固有パスへリンク）
 │   ├── raycast/           # Raycast スクリプト
 │   ├── starship.toml      # プロンプト設定
 │   └── uv/                # Python パッケージ管理設定

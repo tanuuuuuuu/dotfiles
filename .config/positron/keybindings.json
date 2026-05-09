@@ -1,0 +1,8 @@
+// Positron は起動時にレイアウトを強制適用する設定がないため、
+// ショートカットで Stacked Layout に戻せるようにしておく。
+[
+    {
+        "key": "cmd+alt+l",
+        "command": "workbench.action.positronFourPaneDataScienceLayout"
+    }
+]

@@ -137,12 +137,18 @@ for script in "$DOTFILES_DIR"/bin/*; do
 done
 
 # ==================================================
-# Positron CLI
+# Positron
 # ==================================================
 # Positron に同梱されている VS Code スタイルの CLI を PATH に通す
 # `positron <file>` / `positron <project-dir>` で起動できるようにする
 if [ -d "/Applications/Positron.app" ]; then
     ln -sf "/Applications/Positron.app/Contents/Resources/app/bin/code" /opt/homebrew/bin/positron
 fi
+
+# ユーザー設定・キーバインド（VS Code ベースなので JSONC 形式）
+POSITRON_USER_DIR="$HOME/Library/Application Support/Positron/User"
+mkdir -p "$POSITRON_USER_DIR"
+ln -sf "$DOTFILES_DIR/.config/positron/settings.json" "$POSITRON_USER_DIR/settings.json"
+ln -sf "$DOTFILES_DIR/.config/positron/keybindings.json" "$POSITRON_USER_DIR/keybindings.json"
 
 echo "Setup complete! Run 'source ~/.zshrc' to apply changes."
