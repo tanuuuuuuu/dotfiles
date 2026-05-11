@@ -45,7 +45,6 @@ nvim/
 │       ├── lualine.lua     # ステータスライン（モード表示）
 │       ├── mason.lua       # LSP/ツール管理（未使用）
 │       ├── neo-tree.lua    # ファイルツリー
-│       ├── neominimap.lua  # ミニマップ（コード縮小表示）
 │       ├── none-ls.lua     # フォーマッタ/リンター（未使用）
 │       ├── table-mode.lua  # Markdown テーブル自動整形
 │       ├── treesitter.lua  # シンタックスハイライト（未使用）
@@ -87,7 +86,6 @@ nvim/
 | im-select      | 追加 | Insert/Cmdline モードを抜けたとき IME を英語に切替 | Normal モードに戻ったとき日本語入力が残る問題を解消            |
 | image          | 追加 | バッファ内で画像プレビュー                         | png/jpg/svg 等の画像をエディタ内で直接表示                     |
 | lualine        | 追加 | モード表示付きステータスライン                     | 現在のモード（Normal/Insert/Visual 等）を色付きで表示          |
-| neominimap     | 追加 | コード縮小表示のミニマップ                         | ファイル全体の構造を俯瞰し、Git 変更・診断・検索結果を表示     |
 | vim-table-mode | 追加 | Markdown テーブル自動整形                          | 保存時にテーブルの列幅を自動で揃える                           |
 
 > [!NOTE]
@@ -169,18 +167,6 @@ AstroNvim のコア機能をカスタマイズ。
 
 > [!NOTE]
 > `macism` コマンドが必要。`brew install macism` でインストール。
-
-### neominimap.lua - ミニマップ
-
-[neominimap.nvim](https://github.com/Isrothy/neominimap.nvim) でコードの縮小表示（ミニマップ）を表示。VS Code のミニマップに相当する機能。
-
-| 設定                    | 値      | 説明                                     |
-| ----------------------- | ------- | ---------------------------------------- |
-| `layout`                | float   | 各ウィンドウにフローティングで表示       |
-| `minimap_width`         | 10      | ミニマップの表示幅                       |
-| `current_line_position` | percent | ファイル全体に対する相対位置でスクロール |
-
-**表示される情報**: コード構造（Treesitter）、Git 変更箇所（gitsigns 連携）、診断情報（LSP）、検索結果
 
 ### image.lua - 画像プレビュー
 
