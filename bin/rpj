@@ -1,0 +1,153 @@
+#!/bin/zsh
+# rpj - R 分析プロジェクトを作成 or 既存プロジェクトを Positron で開く
+#
+# Usage:
+#   rpj              ... SEARCH_ROOTS 配下の renv プロジェクトを fzf 選択
+#   rpj <既存パス>   ... そのまま Positron で開く
+#   rpj <新規パス>   ... カレント基準で新規作成・初期化 → Positron で開く
+
+set -e
+
+DEFAULT_PACKAGES=("tidyverse" "knitr" "rmarkdown")
+SEARCH_ROOTS=("$HOME/repos")
+
+usage() {
+  echo "Usage: rpj [<directory>]" >&2
+  exit 1
+}
+
+require_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    echo "rpj: required command not found: $1" >&2
+    exit 1
+  fi
+}
+
+# 既存プロジェクト一覧を fzf で選んで Positron で開く
+pick_and_open() {
+  require_cmd find
+  require_cmd fzf
+
+  local lockfiles
+  lockfiles=$(find "${SEARCH_ROOTS[@]}" -name renv.lock -not -path '*/renv/*' 2>/dev/null || true)
+  if [[ -z "$lockfiles" ]]; then
+    echo "No R projects found in ${SEARCH_ROOTS[*]}"
+    exit 0
+  fi
+
+  local projects
+  projects=$(echo "$lockfiles" | xargs -n1 dirname | sort -u)
+
+  # 各プロジェクトに mtime と表示用日付を付与、mtime 降順でソート
+  # 形式: <mtime>\t<YYYY-MM-DD>\t<path>
+  local lines=""
+  local dir mtime date_str
+  while IFS= read -r dir; do
+    [[ -z "$dir" ]] && continue
+    mtime=$(stat -f "%m" "$dir" 2>/dev/null) || continue
+    date_str=$(date -r "$mtime" +"%Y-%m-%d")
+    lines+="$mtime"$'\t'"$date_str"$'\t'"$dir"$'\n'
+  done <<< "$projects"
+
+  local selected
+  selected=$(printf '%s' "$lines" | sort -rn -k1,1 -t$'\t' | cut -f2- | \
+    fzf --prompt='rpj> ' --height=40% --reverse \
+        --delimiter=$'\t' --with-nth=1.. --nth=2..) || exit 0
+
+  # 選択行からパス（2カラム目）を抽出
+  positron "$(printf '%s' "$selected" | cut -f2)"
+}
+
+# 新規プロジェクトを作成して初期化
+create_project() {
+  local target="$1"
+
+  mkdir -p "$target"/{data,R,output}
+
+  local target_abs
+  target_abs=$(cd "$target" && pwd)
+  local proj_name
+  proj_name=$(basename "$target_abs")
+
+  # index.qmd の雛形
+  cat > "$target/index.qmd" <<QMD
+---
+title: "$proj_name"
+format: html
+---
+
+\`\`\`{r setup}
+library(tidyverse)
+\`\`\`
+QMD
+
+  # git init + .gitignore
+  (
+    cd "$target"
+    git init -q
+    cat > .gitignore <<'GITIGNORE'
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# renv
+renv/library/
+renv/local/
+renv/cellar/
+renv/staging/
+renv/python/
+renv/sandbox/
+
+# Environment
+.Renviron
+
+# macOS
+.DS_Store
+GITIGNORE
+  )
+
+  # DEFAULT_PACKAGES を R の c("a", "b", ...) 形式に変換
+  local pkg_quoted=()
+  local pkg
+  for pkg in "${DEFAULT_PACKAGES[@]}"; do
+    pkg_quoted+=("\"$pkg\"")
+  done
+  local pkg_list="${(j:, :)pkg_quoted}"
+
+  # renv の初期化
+  (
+    cd "$target"
+    Rscript -e "renv::init(bare = TRUE); renv::install(c($pkg_list)); renv::snapshot()"
+  )
+
+  positron "$target"
+}
+
+main() {
+  if (( $# > 1 )); then
+    usage
+  fi
+
+  require_cmd positron
+
+  if (( $# == 0 )); then
+    pick_and_open
+    return
+  fi
+
+  local arg="$1"
+  if [[ -d "$arg" ]]; then
+    positron "$arg"
+    return
+  fi
+
+  require_cmd R
+  require_cmd Rscript
+  require_cmd git
+  create_project "$arg"
+}
+
+main "$@"
