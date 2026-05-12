@@ -10,6 +10,7 @@ set -e
 
 DEFAULT_PACKAGES=("tidyverse" "knitr" "rmarkdown")
 SEARCH_ROOTS=("$HOME/repos")
+QUARTO_AUTHOR="tanu"
 
 usage() {
   echo "Usage: rpj [<directory>]" >&2
@@ -73,13 +74,37 @@ create_project() {
   cat > "$target/index.qmd" <<QMD
 ---
 title: "$proj_name"
-format: html
 ---
 
 \`\`\`{r setup}
 library(tidyverse)
 \`\`\`
 QMD
+
+  # _quarto.yml の雛形
+  cat > "$target/_quarto.yml" <<QUARTOYML
+project:
+  execute-dir: project
+
+author: "$QUARTO_AUTHOR"
+date: last-modified
+lang: ja
+
+execute:
+  warning: false
+  message: false
+  freeze: auto
+
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-location: left
+    number-sections: true
+    code-tools: true
+    theme: cosmo
+    df-print: paged
+QUARTOYML
 
   # git init + .gitignore
   (
@@ -100,6 +125,10 @@ renv/cellar/
 renv/staging/
 renv/python/
 renv/sandbox/
+
+# Quarto
+/.quarto/
+/_freeze/
 
 # Environment
 .Renviron
