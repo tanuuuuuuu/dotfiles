@@ -80,6 +80,11 @@ title: "$proj_name"
 #| label: setup
 
 library(tidyverse)
+
+options(
+  width = 10000, # tibble の折り返し回避
+  scipen = 999   # 指数表記の抑制
+)
 \`\`\`
 QMD
 
@@ -101,11 +106,15 @@ format:
   html:
     embed-resources: true
     toc: true
-    toc-location: left
-    number-sections: true
-    code-tools: true
-    theme: cosmo
-    df-print: paged
+    toc-depth: 4
+    toc-location: right
+    theme: materia
+    df-print: tibble
+    include-in-header:
+      text: |
+        <style>
+        pre, code { font-family: "HackGen Console", "Osaka-Mono", monospace; }
+        </style>
 QUARTOYML
 
   # git init + .gitignore
