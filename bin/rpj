@@ -10,7 +10,7 @@ set -e
 
 DEFAULT_PACKAGES=("tidyverse" "knitr" "rmarkdown")
 SEARCH_ROOTS=("$HOME/repos")
-QUARTO_AUTHOR="tanu"
+QUARTO_AUTHOR="たぬ（[@tanuhack](https://x.com/tanuhack)）"
 
 usage() {
   echo "Usage: rpj [<directory>]" >&2
@@ -76,7 +76,9 @@ create_project() {
 title: "$proj_name"
 ---
 
-\`\`\`{r setup}
+\`\`\`{r}
+#| label: setup
+
 library(tidyverse)
 \`\`\`
 QMD
