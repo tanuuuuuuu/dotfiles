@@ -2,14 +2,13 @@
 # rpj - R 分析プロジェクトを作成 or 既存プロジェクトを Positron で開く
 #
 # Usage:
-#   rpj              ... SEARCH_ROOTS 配下の renv プロジェクトを fzf 選択
+#   rpj              ... $HOME 配下の renv プロジェクトを fzf 選択
 #   rpj <既存パス>   ... そのまま Positron で開く
 #   rpj <新規パス>   ... カレント基準で新規作成・初期化 → Positron で開く
 
 set -e
 
 DEFAULT_PACKAGES=("tidyverse" "knitr" "rmarkdown")
-SEARCH_ROOTS=("$HOME/repos")
 QUARTO_AUTHOR="たぬ（[@tanuhack](https://x.com/tanuhack)）"
 
 usage() {
@@ -26,13 +25,14 @@ require_cmd() {
 
 # 既存プロジェクト一覧を fzf で選んで Positron で開く
 pick_and_open() {
-  require_cmd find
+  require_cmd fd
   require_cmd fzf
 
   local lockfiles
-  lockfiles=$(find "${SEARCH_ROOTS[@]}" -name renv.lock -not -path '*/renv/*' 2>/dev/null || true)
+  lockfiles=$(fd --type f '^renv\.lock$' "$HOME" \
+    --exclude renv --exclude Library 2>/dev/null || true)
   if [[ -z "$lockfiles" ]]; then
-    echo "No R projects found in ${SEARCH_ROOTS[*]}"
+    echo "No R projects found under $HOME"
     exit 0
   fi
 

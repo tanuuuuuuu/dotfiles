@@ -40,6 +40,12 @@
 ### Bash コマンド
 
 - ファイル削除は `rm` ではなく `trash` コマンドを使用（復元可能にするため）
+- ファイル名・パス検索は `find` ではなく `fd` コマンドを使用（高速・`.gitignore` 尊重・構文が簡潔）
+  - 例: `fd 'pattern' path/ --type f --exclude node_modules`
+  - `find` でしか実現できない用途（`-newer`、複雑なパーミッション条件など）の場合のみ `find` を使う
+- ファイル内容検索は `grep` ではなく `rg`（ripgrep）コマンドを使用（高速・`.gitignore` 尊重・デフォルトで再帰検索）
+  - 例: `rg 'pattern' path/ --type py`
+  - `grep` でしか実現できない用途や、パイプ経由でテキスト処理する場合のみ `grep` を使う
 - 「最近」「直近」など現在日時が必要な場合は、必ず `date` コマンドで取得
 - `brew install` 実行後は `~/dotfiles/Brewfile` にも追加する
   - 通常パッケージ: `brew "パッケージ名"`

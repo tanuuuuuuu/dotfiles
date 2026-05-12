@@ -3,6 +3,7 @@ tap "laishulu/homebrew"
 brew "defaultbrowser"
 brew "direnv"
 brew "duti"        # macOS のファイル関連付け管理
+brew "fd"          # find の代替（高速・.gitignore 尊重）
 brew "fzf"
 brew "gh"
 brew "googleworkspace-cli"
@@ -12,6 +13,7 @@ brew "luarocks"
 brew "mise"
 brew "neovim"
 brew "r"
+brew "ripgrep"     # grep の代替（高速・.gitignore 尊重）
 brew "starship"
 brew "trash"       # rm の代わりに使用（復元可能）
 brew "tree"
