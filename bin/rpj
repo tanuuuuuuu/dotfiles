@@ -117,6 +117,18 @@ format:
         </style>
 QUARTOYML
 
+  # .Renviron.example（環境変数のテンプレ。実体の .Renviron は .gitignore 済み）
+  cat > "$target/.Renviron.example" <<'RENVIRON'
+# このファイルを .Renviron にコピーして実際の値を記入する。
+# .Renviron は .gitignore に含まれるためコミットされない。
+# 編集後は readRenviron("~/.Renviron") か R の再起動で反映。
+
+# OPENAI_API_KEY=sk-xxxxx
+# GITHUB_PAT=ghp_xxxxx
+# GOOGLE_APPLICATION_CREDENTIALS=/path/to/key.json
+# GCP_PROJECT_ID=my-project
+RENVIRON
+
   # git init + .gitignore
   (
     cd "$target"
