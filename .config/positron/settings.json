@@ -3,5 +3,8 @@
     "files.associations": {
         // renv.lock は中身が JSON だが拡張子が .lock なので明示的に紐付ける
         "renv.lock": "json"
-    }
+    },
+    // NF 版が入っていれば優先、無ければ通常版 HackGen Console にフォールバック
+    "editor.fontFamily": "'HackGen Console NF', 'HackGen Console', Menlo, monospace",
+    "terminal.integrated.fontFamily": "'HackGen Console NF', 'HackGen Console', Menlo, monospace"
 }

@@ -127,6 +127,12 @@ if [ -d ~/.claude/skills ] && [ ! -L ~/.claude/skills ]; then
 fi
 ln -sfn "$DOTFILES_DIR/.claude/skills" ~/.claude/skills
 
+# output-stylesはディレクトリ全体をシンボリックリンク
+if [ -d ~/.claude/output-styles ] && [ ! -L ~/.claude/output-styles ]; then
+    rm -rf ~/.claude/output-styles
+fi
+ln -sfn "$DOTFILES_DIR/.claude/output-styles" ~/.claude/output-styles
+
 ln -sf "$DOTFILES_DIR/.claude/sounds/complete.wav" ~/.claude/sounds/complete.wav
 ln -sf "$DOTFILES_DIR/.claude/sounds/confirm.wav" ~/.claude/sounds/confirm.wav
 

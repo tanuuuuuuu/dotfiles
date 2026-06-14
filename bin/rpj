@@ -129,11 +129,18 @@ QUARTOYML
 # GCP_PROJECT_ID=my-project
 RENVIRON
 
-  # git init + .gitignore
-  (
-    cd "$target"
-    git init -q
-    cat > .gitignore <<'GITIGNORE'
+  # git init + .gitignore（モノレポ等で不要な場合はスキップできる）
+  local init_git=""
+  if [[ -t 0 ]]; then
+    read "init_git?Initialize git repository here? [Y/n]: "
+  fi
+  init_git="${init_git:-Y}"
+  if [[ "$init_git" =~ ^[Yy]$ ]]; then
+    require_cmd git
+    (
+      cd "$target"
+      git init -q
+      cat > .gitignore <<'GITIGNORE'
 # R
 .Rproj.user/
 .Rhistory
@@ -159,7 +166,10 @@ renv/sandbox/
 # macOS
 .DS_Store
 GITIGNORE
-  )
+    )
+  else
+    echo "rpj: skipped git init (assuming parent repository manages this project)"
+  fi
 
   # DEFAULT_PACKAGES を R の c("a", "b", ...) 形式に変換
   local pkg_quoted=()
@@ -198,7 +208,6 @@ main() {
 
   require_cmd R
   require_cmd Rscript
-  require_cmd git
   create_project "$arg"
 }
 
