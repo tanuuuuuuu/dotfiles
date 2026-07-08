@@ -80,6 +80,7 @@ fi
 # ==================================================
 ln -sf "$DOTFILES_DIR/.hushlogin" ~/.hushlogin
 ln -sf "$DOTFILES_DIR/.gitconfig" ~/.gitconfig
+ln -sf "$DOTFILES_DIR/.zshenv" ~/.zshenv
 ln -sf "$DOTFILES_DIR/.zprofile" ~/.zprofile
 ln -sf "$DOTFILES_DIR/.zshrc" ~/.zshrc
 
