@@ -2,3 +2,4 @@
 python = "3.13"
 node = "lts"
 "npm:obsidian-headless" = "latest"
+"github:ctxrs/ctx" = { version = "latest", bin = "ctx" }

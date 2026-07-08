@@ -58,6 +58,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "claude-fable-5",
   "hooks": {
     "Stop": [
       {
@@ -94,6 +95,7 @@
   },
   "outputStyle": "concise",
   "effortLevel": "high",
+  "tui": "fullscreen",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true
