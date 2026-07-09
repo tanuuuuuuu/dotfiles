@@ -58,6 +58,7 @@
 - ファイル内容検索は `grep` ではなく `rg`（ripgrep）コマンドを使用（高速・`.gitignore` 尊重・デフォルトで再帰検索）
   - 例: `rg 'pattern' path/ --type py`
   - `grep` でしか実現できない用途や、パイプ経由でテキスト処理する場合のみ `grep` を使う
+- 過去の会話履歴・エージェントセッションは `ctx` で検索できる（指示がなくても、関連しそうなら行動前に参照する）。詳細は skill `ctx-agent-history-search`
 - 「最近」「直近」など現在日時が必要な場合は、必ず `date` コマンドで取得
 - `brew install` 実行後は `~/dotfiles/Brewfile` にも追加する
   - 通常パッケージ: `brew "パッケージ名"`
