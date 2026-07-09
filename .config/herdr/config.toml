@@ -8,3 +8,8 @@ prefix = "ctrl+a"
 
 [ui]
 agent_panel_sort = "spaces"
+
+[experimental]
+# prefix モード中だけ入力ソースを ASCII レイアウトに一時切替し、
+# prefix を抜けたら元の入力ソースに自動復帰する（CJK IME 対策）。macOS 限定。
+switch_ascii_input_source_in_prefix = true
