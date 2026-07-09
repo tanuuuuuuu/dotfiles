@@ -1,5 +1,15 @@
 [user]
-	name = tanu
+	name = たぬ
 	email = 102398347+tanuuuuuuu@users.noreply.github.com
 [core]
 	excludesfile = ~/.config/git/ignore
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true       # n / N で差分ファイル間を移動
+	line-numbers = true   # 行番号を表示
+[merge]
+	conflictstyle = zdiff3
+[diff]
+	colorMoved = default

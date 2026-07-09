@@ -20,6 +20,10 @@ macOS 用の個人設定ファイル管理リポジトリ。
 | ターミナル     | Ghostty                    | ターミナルエミュレータ                |
 | 開発ツール     | Neovim（AstroNvim ベース） | エディタ                              |
 |                | Claude Code                | コーディングエージェント              |
+|                | herdr                      | AIエージェント用ターミナルマルチプレクサ |
+|                | lazygit                    | git 操作 TUI                          |
+|                | git-delta                  | git diff の色付け（pager）            |
+|                | yazi                       | ファイルマネージャ TUI                |
 | ユーティリティ | Raycast                    | ランチャーアプリ                      |
 
 ## ディレクトリ構成

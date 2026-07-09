@@ -1,0 +1,10 @@
+# herdr 設定
+# 全デフォルトは `herdr --default-config` で確認できる。
+# ここには変更したい項目だけを書く（未記載はデフォルト値）。
+
+[keys]
+# プレフィックス（herdr への命令の合図キー）。デフォルトは ctrl+b。
+prefix = "ctrl+a"
+
+[ui]
+agent_panel_sort = "spaces"

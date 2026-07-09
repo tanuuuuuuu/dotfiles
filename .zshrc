@@ -55,6 +55,17 @@ setopt correct
 # エイリアス
 # ==================================================
 alias vim='nvim'
+alias lg='lazygit'   # git 操作 TUI
+
+# yazi: 終了時に最後のディレクトリへ cd する公式ラッパー（`y` で起動）
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
 
 # ==================================================
 # Ghostty ヘルパー関数

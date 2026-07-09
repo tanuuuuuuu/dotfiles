@@ -6,8 +6,11 @@ brew "duti"        # macOS のファイル関連付け管理
 brew "fd"          # find の代替（高速・.gitignore 尊重）
 brew "fzf"
 brew "gh"
+brew "git-delta"   # git diff の色付け・シンタックスハイライト（pager）
 brew "googleworkspace-cli"
+brew "herdr"       # AIエージェント用ターミナルマルチプレクサ（状態サイドバー付き）
 brew "laishulu/homebrew/macism"  # IME切り替え（Neovim用）
+brew "lazygit"     # git 操作 TUI（キーヒント常時表示・マウス対応）
 brew "librsvg"
 brew "luarocks"
 brew "mise"
@@ -17,6 +20,7 @@ brew "ripgrep"     # grep の代替（高速・.gitignore 尊重）
 brew "starship"
 brew "trash"       # rm の代わりに使用（復元可能）
 brew "tree"
+brew "yazi"        # ファイルマネージャ TUI（プレビュー付き）
 brew "zoxide"      # ディレクトリ移動の簡略化（z / zi）
 brew "zsh-autosuggestions"
 
