@@ -4,7 +4,8 @@
 
 [keys]
 # プレフィックス（herdr への命令の合図キー）。デフォルトは ctrl+b。
-prefix = "ctrl+a"
+# ctrl+a は ことえり（変換中の行頭移動）と Ghostty の Cmd+←（\x01 送信）に衝突するため回避。
+prefix = "ctrl+q"
 
 [ui]
 agent_panel_sort = "spaces"
