@@ -67,6 +67,14 @@ if ! command -v claude &> /dev/null; then
 fi
 
 # ==================================================
+# gh 拡張
+# ==================================================
+if command -v gh &> /dev/null && ! gh extension list 2>/dev/null | grep -q gh-dash; then
+    echo "Installing gh-dash..."
+    gh extension install dlvhdr/gh-dash
+fi
+
+# ==================================================
 # Google Cloud SDK
 # ==================================================
 if ! command -v gcloud &> /dev/null && [ ! -d "$HOME/google-cloud-sdk" ]; then
