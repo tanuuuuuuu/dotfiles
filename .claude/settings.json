@@ -58,37 +58,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "open -a Ghostty"
-          },
-          {
-            "type": "command",
-            "command": "afplay ~/.claude/sounds/complete.wav"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "open -a Ghostty"
-          },
-          {
-            "type": "command",
-            "command": "afplay ~/.claude/sounds/confirm.wav"
-          }
-        ]
-      }
-    ]
-  },
+  "model": "claude-fable-5[1m]",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh"
