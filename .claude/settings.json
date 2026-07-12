@@ -1,4 +1,22 @@
 {
+  "agentPushNotifEnabled": true,
+  "effortLevel": "high",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "bash '/Users/tanu/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ]
+  },
+  "model": "claude-fable-5[1m]",
+  "outputStyle": "concise",
   "permissions": {
     "allow": [
       "Bash(brew --prefix:*)",
@@ -52,11 +70,11 @@
       "WebFetch",
       "WebSearch"
     ],
+    "defaultMode": "auto",
     "deny": [
       "Bash(rm *)",
       "Bash(rmdir *)"
-    ],
-    "defaultMode": "auto"
+    ]
   },
   "sandbox": {
     "network": {
@@ -70,15 +88,11 @@
       ]
     }
   },
-  "model": "claude-fable-5[1m]",
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh"
-  },
-  "outputStyle": "concise",
-  "effortLevel": "high",
-  "tui": "fullscreen",
-  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
+  "statusLine": {
+    "command": "~/.claude/statusline.sh",
+    "type": "command"
+  },
+  "tui": "fullscreen",
   "voiceEnabled": true
 }
