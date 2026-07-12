@@ -1,3 +1,4 @@
+onboarding = false
 # herdr 設定
 # 全デフォルトは `herdr --default-config` で確認できる。
 # ここには変更したい項目だけを書く（未記載はデフォルト値）。
@@ -7,8 +8,13 @@
 # ctrl+a は ことえり（変換中の行頭移動）と Ghostty の Cmd+←（\x01 送信）に衝突するため回避。
 prefix = "ctrl+q"
 
-[ui]
-agent_panel_sort = "spaces"
+# agent pane 間を prefix なしで直接ジャンプ（ctrl+alt は pane 内アプリと衝突しにくい）
+next_agent = "ctrl+alt+j"
+previous_agent = "ctrl+alt+k"
+
+# workspace の直接切替（agent ジャンプ + shift）
+next_workspace = "ctrl+shift+alt+j"
+previous_workspace = "ctrl+shift+alt+k"
 
 [experimental]
 # prefix モード中だけ入力ソースを ASCII レイアウトに一時切替し、
