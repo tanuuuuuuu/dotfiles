@@ -58,6 +58,18 @@
     ],
     "defaultMode": "auto"
   },
+  "sandbox": {
+    "network": {
+      "allowMachLookup": [
+        "com.apple.SystemConfiguration.configd",
+        "com.apple.SystemConfiguration.DNSConfiguration",
+        "com.apple.SystemConfiguration.NetworkInformation"
+      ],
+      "allowUnixSockets": [
+        "/var/run/mDNSResponder"
+      ]
+    }
+  },
   "model": "claude-fable-5[1m]",
   "statusLine": {
     "type": "command",
