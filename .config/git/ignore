@@ -6,6 +6,7 @@
 .env
 .env.*
 !.env.example
+.envrc
 
 # 秘密鍵・証明書
 *.pem

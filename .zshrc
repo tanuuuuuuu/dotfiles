@@ -75,9 +75,9 @@ function y() {
 source "$HOME/.local/bin/gdev"
 
 # ==================================================
-# gcloud 切り替え
+# gcloud プロファイル
 # ==================================================
-## gswitch: gcloud configuration + ADC を一括切り替え
-## gswitch-setup: 新規 configuration の作成
+## 切り替えは direnv（各リポジトリの .envrc で CLOUDSDK_CONFIG を export）
+## gswitch-setup: 新規プロファイルの作成
 source "$HOME/.local/bin/gswitch"
 
