@@ -9,6 +9,7 @@ brew "gh"
 brew "git-delta"   # git diff の色付け・シンタックスハイライト（pager）
 brew "googleworkspace-cli"
 brew "herdr"       # AIエージェント用ターミナルマルチプレクサ（状態サイドバー付き）
+brew "hunk"        # diff レビュー TUI（review-first・マウス対応・watch モード）
 brew "laishulu/homebrew/macism"  # IME切り替え（Neovim用）
 brew "lazygit"     # git 操作 TUI（キーヒント常時表示・マウス対応）
 brew "librsvg"
