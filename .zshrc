@@ -70,7 +70,6 @@ function y() {
 # ==================================================
 # gcloud プロファイル
 # ==================================================
-## 切り替えは direnv（各リポジトリの .envrc で CLOUDSDK_CONFIG を export）
-## gswitch-setup: 新規プロファイルの作成
-source "$HOME/.local/bin/gswitch"
+## ~/.config/gcloud-profiles/<name>/ に分離し、各リポジトリの .envrc で
+## CLOUDSDK_CONFIG を export して direnv で自動切り替え（コマンドは不要）
 
