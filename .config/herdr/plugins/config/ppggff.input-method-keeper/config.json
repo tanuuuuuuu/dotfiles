@@ -1,0 +1,23 @@
+{
+  "enabled": true,
+  "debug": false,
+  "session_name": "auto",
+  "default_action": "reset",
+  "default_input_source": "com.apple.keylayout.ABC",
+  "notify_on_focus": true,
+  "pane_status_on_focus": true,
+  "focus_log": true,
+  "status_ttl_ms": 600000,
+  "backend": {
+    "name": "macism",
+    "executable_candidates": [
+      "/opt/homebrew/bin/macism",
+      "/usr/local/bin/macism",
+      "macism"
+    ],
+    "current_args": [],
+    "select_args": [
+      "{id}"
+    ]
+  }
+}

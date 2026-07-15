@@ -113,6 +113,10 @@ ln -sf "$DOTFILES_DIR/.config/git/ignore" ~/.config/git/ignore
 mkdir -p ~/.config/herdr
 ln -sf "$DOTFILES_DIR/.config/herdr/config.toml" ~/.config/herdr/config.toml
 
+# herdr input-method-keeper プラグイン設定（プラグイン本体は herdr plugin install ppggff/herdr-plugin/input-method-keeper）
+mkdir -p ~/.config/herdr/plugins/config/ppggff.input-method-keeper
+ln -sf "$DOTFILES_DIR/.config/herdr/plugins/config/ppggff.input-method-keeper/config.json" ~/.config/herdr/plugins/config/ppggff.input-method-keeper/config.json
+
 # raycast script-commandsはディレクトリ全体をシンボリックリンク
 if [ -d ~/.config/raycast/script-commands ] && [ ! -L ~/.config/raycast/script-commands ]; then
     rm -rf ~/.config/raycast/script-commands
