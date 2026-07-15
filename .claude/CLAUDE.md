@@ -44,6 +44,8 @@
 - 独立した複数タスク・複数ブランチの同時進行になりそうだと察知したら、明示的な依頼がなくても git worktree での並行開発を提案する
   - 例: 別ブランチの作業を頼まれた、レビュー待ちの間に別機能に着手したい、モノレポで複数プロジェクトを同時に触る
 - worktree は `~/repos/<リポジトリ名>-<ブランチ名>` に作成し、各 worktree で別々の Claude Code セッションを起動する
+- 元リポジトリに `.envrc` がある場合（gitignore 対象なので worktree に複製されない）、作成直後に必ず実行する:
+  `cp <元リポジトリ>/.envrc <worktree>/ && direnv allow <worktree>`
 - 作業完了後は `git worktree remove` での削除まで案内する
 
 ### 調査フェーズ
