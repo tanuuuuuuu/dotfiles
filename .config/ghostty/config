@@ -105,7 +105,7 @@ macos-option-as-alt = left
 # キー転送
 # ==================================================
 
-# Cmd+` を kitty CSI-u（super+`）として TUI に転送する。
-# herdr が popup ターミナルのキーバインド（cmd+backtick）として拾う。
-# macOS の Cmd キーは素の状態では pty に届かないため text: で明示送信する。
+# Cmd 修飾キーは素の状態では pty に届かないため、kitty CSI-u として明示送信し
+# herdr 側のキーバインド（cmd+...）で拾う。
+# Cmd+` → popup ターミナル
 keybind = super+grave_accent=text:\x1b[96;9u

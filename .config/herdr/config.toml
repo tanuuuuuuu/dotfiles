@@ -8,13 +8,21 @@ onboarding = false
 # ctrl+a は ことえり（変換中の行頭移動）と Ghostty の Cmd+←（\x01 送信）に衝突するため回避。
 prefix = "ctrl+q"
 
-# agent pane 間を prefix なしで直接ジャンプ（ctrl+alt は pane 内アプリと衝突しにくい）
-next_agent = "ctrl+alt+j"
-previous_agent = "ctrl+alt+k"
+# agent pane 間を prefix なしで直接ジャンプ。pane 内の ctrl+j（改行）/
+# ctrl+k（kill-line）は herdr が横取りする（改行は shift+enter で代替可能）
+next_agent = "ctrl+j"
+previous_agent = "ctrl+k"
 
-# workspace の直接切替（agent ジャンプ + shift）
-next_workspace = "ctrl+shift+alt+j"
-previous_workspace = "ctrl+shift+alt+k"
+# workspace の直接切替（agent ジャンプ + shift でスコープ拡大）
+next_workspace = "ctrl+shift+j"
+previous_workspace = "ctrl+shift+k"
+
+# 新規タブ。pane 内の ctrl+n（次の履歴/下移動）は herdr が横取りする
+new_tab = "ctrl+n"
+
+# タブ切替（ctrl+数字はレガシー端末では表現不可だが、
+# herdr は kitty キーボードプロトコルを有効化しているため受信できる）
+switch_tab = "ctrl+1..9"
 
 # ポップアップターミナル（タイル配置を崩さず一時シェルを重ねる）
 # 中で hunk 等の TUI も使える。exit / ctrl+d で閉じる
