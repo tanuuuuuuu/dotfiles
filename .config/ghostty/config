@@ -102,17 +102,10 @@ macos-option-as-alt = left
 
 
 # ==================================================
-# クイックターミナル（Quake スタイル）
+# キー転送
 # ==================================================
 
-# どこからでも Cmd+` で呼び出し（global キーバインド）
-keybind = global:super+grave_accent=toggle_quick_terminal
-
-# 表示位置（top / bottom / left / right）
-quick-terminal-position = top
-
-# サイズ（主軸,副軸 / %, px 指定可。right の場合: 幅,高さ）
-# quick-terminal-size = 35%
-
-# アニメーション時間（秒、0 で無効化）
-quick-terminal-animation-duration = 0.3
+# Cmd+` を kitty CSI-u（super+`）として TUI に転送する。
+# herdr が popup ターミナルのキーバインド（cmd+backtick）として拾う。
+# macOS の Cmd キーは素の状態では pty に届かないため text: で明示送信する。
+keybind = super+grave_accent=text:\x1b[96;9u

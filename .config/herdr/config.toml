@@ -18,8 +18,9 @@ previous_workspace = "ctrl+shift+alt+k"
 
 # ポップアップターミナル（タイル配置を崩さず一時シェルを重ねる）
 # 中で hunk 等の TUI も使える。exit / ctrl+d で閉じる
+# Cmd+` は Ghostty 側で CSI-u（super+`）に変換して送信している（ghostty/config 参照）
 [[keys.command]]
-key = "prefix+t"
+key = "cmd+backtick"
 type = "popup"
 command = "exec \"${SHELL:-sh}\""
 description = "popup terminal"
