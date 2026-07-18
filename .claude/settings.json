@@ -1,22 +1,4 @@
 {
-  "agentPushNotifEnabled": true,
-  "effortLevel": "high",
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/tanu/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ]
-  },
-  "model": "claude-fable-5[1m]",
-  "outputStyle": "concise",
   "permissions": {
     "allow": [
       "Bash(brew --prefix:*)",
@@ -70,29 +52,47 @@
       "WebFetch",
       "WebSearch"
     ],
-    "defaultMode": "auto",
     "deny": [
       "Bash(rm *)",
       "Bash(rmdir *)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "claude-fable-5[1m]",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/tanu/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "outputStyle": "concise",
   "sandbox": {
     "network": {
+      "allowUnixSockets": [
+        "/var/run/mDNSResponder"
+      ],
       "allowMachLookup": [
         "com.apple.SystemConfiguration.configd",
         "com.apple.SystemConfiguration.DNSConfiguration",
         "com.apple.SystemConfiguration.NetworkInformation"
-      ],
-      "allowUnixSockets": [
-        "/var/run/mDNSResponder"
       ]
     }
   },
-  "skipAutoPermissionPrompt": true,
-  "statusLine": {
-    "command": "~/.claude/statusline.sh",
-    "type": "command"
-  },
+  "effortLevel": "high",
   "tui": "fullscreen",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
   "voiceEnabled": true
 }
