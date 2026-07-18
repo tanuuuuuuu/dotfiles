@@ -16,6 +16,16 @@ previous_agent = "ctrl+alt+k"
 next_workspace = "ctrl+shift+alt+j"
 previous_workspace = "ctrl+shift+alt+k"
 
+# ポップアップターミナル（タイル配置を崩さず一時シェルを重ねる）
+# 中で hunk 等の TUI も使える。exit / ctrl+d で閉じる
+[[keys.command]]
+key = "prefix+t"
+type = "popup"
+command = "exec \"${SHELL:-sh}\""
+description = "popup terminal"
+width = "85%"
+height = "85%"
+
 [experimental]
 # prefix モード中だけ入力ソースを ASCII レイアウトに一時切替し、
 # prefix を抜けたら元の入力ソースに自動復帰する（CJK IME 対策）。macOS 限定。
