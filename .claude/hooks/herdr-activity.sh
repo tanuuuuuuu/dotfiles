@@ -31,14 +31,16 @@ tool = data.get("tool_name", "")
 inp = data.get("tool_input") or {}
 
 if tool in ("Read", "Edit", "Write", "NotebookEdit"):
-    print(f"{tool} {os.path.basename(str(inp.get("file_path", "")))}")
+    out = f"{tool} {os.path.basename(str(inp.get("file_path", "")))}"
 elif tool == "Bash":
-    desc = inp.get("description") or inp.get("command") or ""
-    print(f"$ {str(desc)[:40]}")
+    out = str(inp.get("description") or inp.get("command") or "")
 elif tool in ("Grep", "Glob"):
-    print(f"{tool} {str(inp.get("pattern", ""))[:30]}")
+    out = f"{tool} {inp.get("pattern", "")}"
 else:
-    print(tool)
+    out = tool
+
+# サイドバー幅で見切れないよう 30 字に制限
+print(out[:30])
 ' 2>/dev/null || true)"
 
 # 空のときは報告しない（直前の表示を維持。空を報告すると行が消える）
