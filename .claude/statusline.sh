@@ -93,6 +93,16 @@ SEVEN_D=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty
 FIVE_H_RESETS=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
 SEVEN_D_RESETS=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
 
+# --- herdr サイドバーへ ctx / compact 回数を報告（カスタムトークン $ctx / $compacts） ---
+if [ "${HERDR_ENV:-}" = "1" ] && [ -n "${HERDR_PANE_ID:-}" ] && command -v herdr >/dev/null 2>&1; then
+    COMPACT_TOKEN=""
+    [ "$COMPACTIONS" -ge 1 ] 2>/dev/null && COMPACT_TOKEN="compact x${COMPACTIONS}"
+    herdr pane report-metadata "$HERDR_PANE_ID" \
+        --source claude-statusline \
+        --token ctx="ctx ${PCT}%" \
+        --token compacts="$COMPACT_TOKEN" >/dev/null 2>&1 &
+fi
+
 if [ -n "$FIVE_H" ] && [ -n "$SEVEN_D" ]; then
     FIVE_COLOR=$(color_for_pct "$FIVE_H")
     SEVEN_COLOR=$(color_for_pct "$SEVEN_D")

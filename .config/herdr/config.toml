@@ -34,6 +34,13 @@ description = "popup terminal"
 width = "85%"
 height = "85%"
 
+# サイドバー agent エントリの表示行（0.7.4+）
+# 1行目: リポジトリ（workspace）+ エージェント名
+# 2行目: コンテキスト使用率 + compact 回数（statusline.sh が報告、compact は 1 回以上で表示）
+# 3行目: 実行中のツール操作（.claude/hooks/herdr-activity.sh が報告）
+[ui.sidebar.agents]
+rows = [["state_icon", "workspace", "agent"], ["$ctx", "$compacts"], ["$activity"]]
+
 [experimental]
 # prefix モード中だけ入力ソースを ASCII レイアウトに一時切替し、
 # prefix を抜けたら元の入力ソースに自動復帰する（CJK IME 対策）。macOS 限定。
