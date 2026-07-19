@@ -19,13 +19,10 @@ except Exception:
     sys.exit(0)
 
 event = data.get("hook_event_name", "")
-if event == "SessionStart":
-    # 開始直後から3行目を確保する（空だと行ごと消えて高さがガクつく）
+if event != "PreToolUse":
+    # SessionStart / Stop 等では idle を表示（空だと行ごと消えて高さがガクつく）
     print("idle")
     sys.exit(0)
-if event != "PreToolUse":
-    # Stop 等では何も報告せず、直前のツール操作を表示したまま残す
-    sys.exit(1)
 
 tool = data.get("tool_name", "")
 inp = data.get("tool_input") or {}
