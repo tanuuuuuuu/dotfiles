@@ -31,8 +31,8 @@ key = "ctrl+backtick"
 type = "popup"
 command = "exec \"${SHELL:-sh}\""
 description = "popup terminal"
-width = "85%"
-height = "85%"
+width = "90%"
+height = "90%"
 
 # サイドバー agent エントリの表示行（0.7.4+）
 # 1行目: リポジトリ（workspace）+ エージェント名
