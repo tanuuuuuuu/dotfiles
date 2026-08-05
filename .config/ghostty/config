@@ -88,6 +88,15 @@ fullscreen = non-native
 
 
 # ==================================================
+# セキュリティ
+# ==================================================
+
+# パスワード入力検知時の Secure Input 自動有効化を無効化
+# （解除されず残留し、Logi Options+ / Karabiner のキー割り当てを殺すため）
+macos-auto-secure-input = false
+
+
+# ==================================================
 # キーバインド
 # ==================================================
 
@@ -99,4 +108,18 @@ keybind = super+c=copy_to_clipboard:plain
 
 # macOSでOptionキーをAltとして使う
 macos-option-as-alt = left
+
+
+# ==================================================
+# クイックターミナル（Quake スタイル）
+# ==================================================
+
+# どこからでも Cmd+` で呼び出し（global キーバインド）
+keybind = global:super+grave_accent=toggle_quick_terminal
+
+# 表示位置（top / bottom / left / right）
+quick-terminal-position = top
+
+# アニメーション時間（秒、0 で無効化）
+quick-terminal-animation-duration = 0.3
 
