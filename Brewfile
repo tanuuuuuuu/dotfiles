@@ -1,7 +1,9 @@
 tap "laishulu/homebrew"
 
+brew "colima"     # ローカル docker ランタイム（VM。docker CLI とセット）
 brew "defaultbrowser"
 brew "direnv"
+brew "docker"     # Docker CLI（デーモンは colima）
 brew "duti"        # macOS のファイル関連付け管理
 brew "fd"          # find の代替（高速・.gitignore 尊重）
 brew "fzf"
@@ -19,6 +21,7 @@ brew "neovim"
 brew "r"
 brew "ripgrep"     # grep の代替（高速・.gitignore 尊重）
 brew "starship"
+brew "terraform"
 brew "trash"       # rm の代わりに使用（復元可能）
 brew "tree"
 brew "yazi"        # ファイルマネージャ TUI（プレビュー付き）
