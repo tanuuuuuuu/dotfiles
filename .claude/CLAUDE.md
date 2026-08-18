@@ -74,6 +74,10 @@
   - cask: `cask "パッケージ名"`
   - tap が必要な場合: `tap "タップ名"` も追加
 
+### ブラウザ操作（Claude in Chrome）
+
+- 拡張が未接続エラーになったら、まず `pgrep -x "Google Chrome"` で起動確認する。未起動なら `open -a "Google Chrome"` で起動し、数秒待ってからリトライする（拡張は Chrome プロセス内で動くため、Chrome 停止＝接続断）
+
 ### 一時ファイル
 
 - 開発過程で生成した一時ファイルはプロジェクト以下の `.claude/tmp` に保存
