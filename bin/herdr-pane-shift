@@ -1,0 +1,98 @@
+#!/bin/bash
+# herdr-pane-shift <left|right|up|down> [pane_id]
+#
+# ペインを指定方向へ「押し出す」。判定は3段階:
+#   1. スタックの相棒がいれば、列/行として抜け出す
+#      - h/l: 同じ列に相棒がいる → 列として左/右に抜ける
+#        例) a | (c/b) で c に left → a | c | b
+#      - j/k: 同じ行に相棒がいる → 行として下/上に抜ける。
+#        読み順（左→右）を保つため j は左隣・k は右隣とペアになる
+#        例) a b c で b に down → (a/b) | c
+#   2. いなければ、その方向の隣と位置を交換（swap）
+#      例) 3列の真ん中で left → 左の列と入れ替え / スタック内で down → 上下入れ替え
+#   3. それもいなければ、反対軸の隣（フォーカス履歴依存）に割り込む
+#      例) 横一列 a b の a に down → b / a
+#
+# 挿入は常に「自分が相手の右/下に入る → up/left のときは swap で前に出る」。
+# 同一タブ内の pane move は same_tab として無視されるため、
+# 一旦 --new-tab に退避してから戻す2段移動で実現する（空タブは自動で閉じる）。
+set -euo pipefail
+
+# デバッグログ（キーバインド経由の失敗は画面に出ないため）
+LOG=/tmp/herdr-pane-shift.log
+exec 2>>"$LOG"
+log() { echo "[$(date +%H:%M:%S)] $*" >> "$LOG"; }
+trap 'log "EXIT code=$?"' EXIT
+
+dir="$1"
+case "$dir" in
+    left|right|up|down) ;;
+    *) echo "usage: herdr-pane-shift <left|right|up|down> [pane_id]" >&2; exit 2 ;;
+esac
+log "invoked dir=$dir arg2=${2:-}"
+
+jget() { python3 -c "import sys,json; print(json.load(sys.stdin)[\"result\"]$1)"; }
+jneighbor() { python3 -c 'import sys,json; print(json.load(sys.stdin)["result"]["neighbor"].get("neighbor_pane_id",""))'; }
+
+cur="${2:-$(herdr pane current --current | jget '["pane"]["pane_id"]')}"
+
+# 1. スタックの相棒（同じ列/行で隣接するペイン）を探す
+decision=$(herdr pane layout --pane "$cur" | python3 -c '
+import sys, json
+cur_id, d = sys.argv[1], sys.argv[2]
+layout = json.load(sys.stdin)["result"]["layout"]
+panes = {p["pane_id"]: p["rect"] for p in layout["panes"]}
+def edges(r): return r["x"], r["y"], r["x"] + r["width"], r["y"] + r["height"]
+cx, cy, cx2, cy2 = edges(panes[cur_id])
+
+mate = None
+for pid, r in panes.items():
+    if pid == cur_id: continue
+    x, y, x2, y2 = edges(r)
+    if d in ("left", "right"):
+        # 同じ列の相棒。下側を優先
+        if x == cx and x2 == cx2 and (y == cy2 or y2 == cy):
+            if mate is None or y == cy2: mate = pid
+    else:
+        # 同じ行の相棒。読み順を保つため down は左隣・up は右隣を優先
+        if y == cy and y2 == cy2 and (x == cx2 or x2 == cx):
+            preferred = (x2 == cx) if d == "down" else (x == cx2)
+            if mate is None or preferred: mate = pid
+print(mate or "-", layout["tab_id"])
+' "$cur" "$dir")
+read -r mate tab <<< "$decision"
+log "cur=$cur mate=$mate"
+
+target="$mate"
+if [ "$target" = "-" ]; then
+    # 2. スタックにいない → その方向の隣と swap
+    nb=$(herdr pane neighbor --pane "$cur" --direction "$dir" | jneighbor)
+    if [ -n "$nb" ]; then
+        log "swap nb=$nb"
+        herdr pane swap --source-pane "$cur" --target-pane "$nb" > /dev/null
+        exit 0
+    fi
+    # 3. 反対軸の隣（herdr のフォーカス履歴を考慮した解決）に割り込む
+    case "$dir" in
+        up|down)    axis1=right axis2=left ;;
+        left|right) axis1=down  axis2=up ;;
+    esac
+    target=$(herdr pane neighbor --pane "$cur" --direction "$axis1" | jneighbor)
+    if [ -z "$target" ]; then
+        target=$(herdr pane neighbor --pane "$cur" --direction "$axis2" | jneighbor)
+    fi
+    log "fallback target=$target"
+    [ -z "$target" ] && exit 0  # 1ペインのみ
+fi
+
+case "$dir" in
+    left|right) split=right ;;
+    up|down)    split=down ;;
+esac
+
+# 自分が target の右/下へ割り込み、up/left なら swap で前に出る
+herdr pane move "$cur" --new-tab --no-focus > /dev/null
+herdr pane move "$cur" --tab "$tab" --split "$split" --target-pane "$target" --focus > /dev/null
+case "$dir" in
+    up|left) herdr pane swap --source-pane "$cur" --target-pane "$target" > /dev/null ;;
+esac

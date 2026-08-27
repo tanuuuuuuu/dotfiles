@@ -34,6 +34,33 @@ description = "popup terminal"
 width = "90%"
 height = "90%"
 
+# ペインをその方向へ「押し出す」（swap/move のデフォルトキーは存在しないため自作）。
+# 隣がいれば swap、いなければ分割の向きを組み替えて移動（bin/herdr-pane-shift）。
+# navigate モードの h/j/k/l（フォーカス移動）の shift 版という対応関係
+[[keys.command]]
+key = "prefix+shift+h"
+type = "shell"
+command = "$HOME/.local/bin/herdr-pane-shift left"
+description = "shift pane left"
+
+[[keys.command]]
+key = "prefix+shift+j"
+type = "shell"
+command = "$HOME/.local/bin/herdr-pane-shift down"
+description = "shift pane down"
+
+[[keys.command]]
+key = "prefix+shift+k"
+type = "shell"
+command = "$HOME/.local/bin/herdr-pane-shift up"
+description = "shift pane up"
+
+[[keys.command]]
+key = "prefix+shift+l"
+type = "shell"
+command = "$HOME/.local/bin/herdr-pane-shift right"
+description = "shift pane right"
+
 # サイドバー agent エントリの表示行（0.7.4+）
 # 1行目: リポジトリ（workspace）+ エージェント名
 # 2行目: 実行中のツール操作（.claude/hooks/herdr-activity.sh が報告、アイドル時は idle）
