@@ -92,3 +92,80 @@ herdr pane move "$cur" --tab "$tab" --split "$split" --target-pane "$target" --f
 case "$dir" in
     up|left) herdr pane swap --source-pane "$cur" --target-pane "$target" > /dev/null ;;
 esac
+
+# --- サイズ正規化 ---
+# 割り込みは target のセルを半割するため、target が既に半分サイズだと
+# 1/4 幅のスリバーが生まれる。合流した行/列（同一軸の分割チェーン）を、
+# 「新入り（自分）は均等シェア、既存メンバーは元の比率を保って残りを分け合う」
+# ように layout.set_split_ratio API で再配分する。
+SOCK="${HERDR_SOCKET_PATH:-$HOME/.config/herdr/herdr.sock}"
+requests=$(herdr pane layout --pane "$cur" | jq -c --arg cur "$cur" --arg tgt "$target" --arg d "$dir" --arg tab "$tab" '
+    (if ($d == "left" or $d == "right") then "right" else "down" end) as $axis
+    | .result.layout as $L
+    | (($L.splits | map(.rect)) + ($L.panes | map(.rect))) as $rects
+    # フラットな rect 情報から分割ツリーを再構築する
+    | def build($rect; $path):
+        ([$L.splits[] | select(.rect == $rect)][0]) as $sp
+        | if $sp then
+            ( [ $rects[]
+                | select(. != $rect)
+                | if $sp.direction == "right"
+                  then select(.x == $rect.x and .y == $rect.y and .height == $rect.height and .width < $rect.width)
+                  else select(.x == $rect.x and .y == $rect.y and .width == $rect.width and .height < $rect.height)
+                  end ]
+              | (if $sp.direction == "right" then max_by(.width) else max_by(.height) end) ) as $fr
+            | (if $sp.direction == "right"
+               then {x: ($rect.x + $fr.width), y: $rect.y, width: ($rect.width - $fr.width), height: $rect.height}
+               else {x: $rect.x, y: ($rect.y + $fr.height), width: $rect.width, height: ($rect.height - $fr.height)} end) as $sr
+            | {type: "split", dir: $sp.direction, rect: $rect, path: $path,
+               first: build($fr; $path + [false]), second: build($sr; $path + [true])}
+          else
+            {type: "pane", id: ($L.panes[] | select(.rect == $rect) | .pane_id), rect: $rect, path: $path}
+          end;
+      def hasid($n; $id): if $n.type == "pane" then $n.id == $id
+                          else hasid($n.first; $id) or hasid($n.second; $id) end;
+      # ルートから cur までの分割ノード列
+      def walk($n): if $n.type == "pane" then []
+                    elif hasid($n.first; $cur) then [$n] + walk($n.first)
+                    else [$n] + walk($n.second) end;
+      build($L.area; []) as $root
+    | walk($root) as $nodes
+    | ($nodes | length) as $k
+    | if $k == 0 then empty else
+      # cur の親から同一軸で連続する最上位ノード = チェーンの根
+      ( [range($k) | select(all($nodes[.:][]; .dir == $axis))] | min ) as $top
+    | if $top == null then empty else
+      $nodes[$top] as $chain
+      # チェーンを同一軸で平坦化した「行/列のメンバー」
+    | def members($n): if $n.type == "split" and $n.dir == $axis
+                       then members($n.first) + members($n.second) else [$n] end;
+      def ext($n): if $axis == "right" then $n.rect.width else $n.rect.height end;
+      members($chain) as $ms
+    | ($ms | length) as $N
+    | ($ms | map(ext(.)) | add) as $E
+    | if $N < 2 then empty else
+      # 目標サイズ: cur は E/N、既存メンバーは挿入前の比率で残りを按分
+      def newsize($m):
+        if $m.type == "pane" and $m.id == $cur then ($E / $N)
+        else ( (if hasid($m; $tgt) then (ext($m) + ($ms[] | select(.type == "pane" and .id == $cur) | ext(.))) else ext($m) end) as $pre
+             | ($E - $E / $N) * $pre / $E )
+        end;
+      def subsum($n): if $n.type == "split" and $n.dir == $axis
+                      then subsum($n.first) + subsum($n.second) else newsize($n) end;
+      def ratios($n): if $n.type == "split" and $n.dir == $axis
+                      then [{path: $n.path, ratio: (subsum($n.first) / subsum($n))}]
+                           + ratios($n.first) + ratios($n.second)
+                      else [] end;
+      ratios($chain)[]
+    | {id: "norm", method: "layout.set_split_ratio",
+       params: {tab_id: $tab, path: .path, ratio: .ratio}}
+    end end end
+' 2>> "$LOG") || requests=""
+# サーバは1接続につき1リクエストしか処理しないため、接続を分けて送る
+if [ -n "$requests" ]; then
+    log "normalize: $requests"
+    while IFS= read -r req; do
+        printf '%s\n' "$req" | nc -U "$SOCK" -w 1 > /dev/null 2>&1 &
+    done <<< "$requests"
+    wait
+fi
