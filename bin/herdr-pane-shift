@@ -31,35 +31,31 @@ case "$dir" in
 esac
 log "invoked dir=$dir arg2=${2:-}"
 
-jget() { python3 -c "import sys,json; print(json.load(sys.stdin)[\"result\"]$1)"; }
-jneighbor() { python3 -c 'import sys,json; print(json.load(sys.stdin)["result"]["neighbor"].get("neighbor_pane_id",""))'; }
+jneighbor() { jq -r '.result.neighbor.neighbor_pane_id // ""'; }
 
-cur="${2:-$(herdr pane current --current | jget '["pane"]["pane_id"]')}"
+cur="${2:-$(herdr pane current --current | jq -r '.result.pane.pane_id')}"
 
 # 1. スタックの相棒（同じ列/行で隣接するペイン）を探す
-decision=$(herdr pane layout --pane "$cur" | python3 -c '
-import sys, json
-cur_id, d = sys.argv[1], sys.argv[2]
-layout = json.load(sys.stdin)["result"]["layout"]
-panes = {p["pane_id"]: p["rect"] for p in layout["panes"]}
-def edges(r): return r["x"], r["y"], r["x"] + r["width"], r["y"] + r["height"]
-cx, cy, cx2, cy2 = edges(panes[cur_id])
-
-mate = None
-for pid, r in panes.items():
-    if pid == cur_id: continue
-    x, y, x2, y2 = edges(r)
-    if d in ("left", "right"):
-        # 同じ列の相棒。下側を優先
-        if x == cx and x2 == cx2 and (y == cy2 or y2 == cy):
-            if mate is None or y == cy2: mate = pid
-    else:
-        # 同じ行の相棒。読み順を保つため down は左隣・up は右隣を優先
-        if y == cy and y2 == cy2 and (x == cx2 or x2 == cx):
-            preferred = (x2 == cx) if d == "down" else (x == cx2)
-            if mate is None or preferred: mate = pid
-print(mate or "-", layout["tab_id"])
-' "$cur" "$dir")
+decision=$(herdr pane layout --pane "$cur" | jq -r --arg cur "$cur" --arg d "$dir" '
+    .result.layout as $L
+    | ($L.panes[] | select(.pane_id == $cur) | .rect) as $c
+    | ($c.x + $c.width) as $cx2 | ($c.y + $c.height) as $cy2
+    | [ $L.panes[]
+        | select(.pane_id != $cur)
+        | {id: .pane_id, x: .rect.x, y: .rect.y,
+           x2: (.rect.x + .rect.width), y2: (.rect.y + .rect.height)} ] as $others
+    | (if ($d == "left" or $d == "right") then
+           # 同じ列の相棒。下側を優先
+           [ $others[] | select(.x == $c.x and .x2 == $cx2 and (.y == $cy2 or .y2 == $c.y)) ]
+           | (map(select(.y == $cy2)) + .)
+       else
+           # 同じ行の相棒。読み順を保つため down は左隣・up は右隣を優先
+           [ $others[] | select(.y == $c.y and .y2 == $cy2 and (.x == $cx2 or .x2 == $c.x)) ]
+           | (if $d == "down" then map(select(.x2 == $c.x)) + .
+                              else map(select(.x == $cx2)) + . end)
+       end) as $mates
+    | "\($mates[0].id // "-") \($L.tab_id)"
+')
 read -r mate tab <<< "$decision"
 log "cur=$cur mate=$mate"
 
