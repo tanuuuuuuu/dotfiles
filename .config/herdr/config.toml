@@ -61,6 +61,51 @@ type = "shell"
 command = "$HOME/.local/bin/herdr-pane-shift right"
 description = "shift pane right"
 
+# herdr-annotate（plannotator/herdr-annotate）: AI 出力に範囲コメントを付けてまとめて送り返す
+# annotate.open は本体デフォルトの open_notification_target (prefix+o) を上書きする。
+# 通知ジャンプが必要になったら本体側を open_notification_target = "prefix+shift+f" 等に逃がす
+[[keys.command]]
+key = "prefix+a"
+type = "plugin_action"
+command = "annotate.capture"
+description = "annotate text"
+
+[[keys.command]]
+key = "prefix+shift+a"
+type = "plugin_action"
+command = "annotate.copy-context"
+description = "copy annotations as context"
+
+[[keys.command]]
+key = "prefix+ctrl+a"
+type = "plugin_action"
+command = "annotate.copy-archive"
+description = "copy annotations as context and archive them"
+
+[[keys.command]]
+key = "prefix+m"
+type = "plugin_action"
+command = "annotate.manage"
+description = "manage annotations"
+
+[[keys.command]]
+key = "prefix+o"
+type = "plugin_action"
+command = "annotate.open"
+description = "review documents in this folder"
+
+[[keys.command]]
+key = "prefix+shift+o"
+type = "plugin_action"
+command = "annotate.last"
+description = "review the agent's last reply"
+
+[[keys.command]]
+key = "prefix+ctrl+o"
+type = "plugin_action"
+command = "annotate.last-newest"
+description = "review the agent's newest reply"
+
 # サイドバー agent エントリの表示行（0.7.4+）
 # 1行目: リポジトリ（workspace）+ エージェント名
 # 2行目: 実行中のツール操作（.claude/hooks/herdr-activity.sh が報告、アイドル時は idle）
