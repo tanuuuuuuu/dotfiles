@@ -38,6 +38,9 @@ macOS 用の個人設定ファイル管理リポジトリ。
 │
 ├── .config/               # ~/.config/ にリンク
 │   ├── ghostty/           # ターミナル設定
+│   ├── git/               # Git グローバル ignore
+│   ├── herdr/             # herdr 設定（キーバインド・プラグイン設定）
+│   ├── karabiner/         # Karabiner-Elements 設定
 │   ├── nvim/              # Neovim 設定
 │   ├── mise/              # ランタイム管理設定
 │   ├── positron/          # Positron 設定（macOS 固有パスへリンク）
