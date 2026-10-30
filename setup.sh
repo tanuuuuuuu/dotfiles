@@ -112,7 +112,6 @@ ln -sf "$DOTFILES_DIR/.config/git/ignore" ~/.config/git/ignore
 
 mkdir -p ~/.config/herdr
 ln -sf "$DOTFILES_DIR/.config/herdr/config.toml" ~/.config/herdr/config.toml
-ln -sf "$DOTFILES_DIR/.config/herdr/config-gpui.local.toml" ~/.config/herdr/config-gpui.local.toml  # Herdr UI（herdr-gpui）の上書き設定
 
 # herdr input-method-keeper プラグイン設定（プラグイン本体は herdr plugin install ppggff/herdr-plugin/input-method-keeper）
 mkdir -p ~/.config/herdr/plugins/config/ppggff.input-method-keeper

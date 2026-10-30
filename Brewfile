@@ -53,6 +53,4 @@ cask "raycast"
 cask "slack"
 cask "transmit"
 cask "raspberry-pi-imager"
-tap "penso/tap"
-cask "herdr-gpui"  # Herdr UI（非公式ネイティブ GUI クライアント。herdr デーモンに接続）
 brew "wget"
