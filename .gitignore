@@ -30,3 +30,6 @@ Thumbs.db
 # Python
 __pycache__/
 *.pyc
+# Herdr UI（herdr-gpui）が自動配置・更新するスキル
+.claude/skills/herdr-gpui-browser/
+.claude/skills/herdr-automations/
