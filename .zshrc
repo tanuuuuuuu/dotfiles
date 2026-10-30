@@ -41,6 +41,27 @@ eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
 
 # ==================================================
+# herdr（サイドバー Spaces 行にホームからの相対パスを表示）
+# プロンプト表示ごとに現在のリポジトリルート（git 外なら cwd）を
+# カスタムトークン $path として workspace に報告する。
+# 表示側は ~/.config/herdr/config.toml の [ui.sidebar.spaces] rows を参照
+# ==================================================
+if [[ "$HERDR_ENV" == "1" && -n "$HERDR_WORKSPACE_ID" ]]; then
+  autoload -Uz add-zsh-hook
+  _herdr_last_path=""
+  _herdr_report_path() {
+    local root
+    root="$(git rev-parse --show-toplevel 2>/dev/null)" || root="$PWD"
+    root="${root/#$HOME/~}"
+    [[ "$root" == "$_herdr_last_path" ]] && return
+    _herdr_last_path="$root"
+    herdr workspace report-metadata "$HERDR_WORKSPACE_ID" \
+      --source zsh-path-hook --token path="$root" >/dev/null 2>&1 &!
+  }
+  add-zsh-hook precmd _herdr_report_path
+fi
+
+# ==================================================
 # その他の設定
 # ==================================================
 HISTFILE=~/.zsh_history

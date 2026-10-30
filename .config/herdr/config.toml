@@ -62,11 +62,16 @@ command = "$HOME/.local/bin/herdr-pane-shift right"
 description = "shift pane right"
 
 # サイドバー agent エントリの表示行（0.7.4+）
-# 1行目: リポジトリ（workspace）+ エージェント名
+# 1行目: 状態アイコン + リポジトリ（workspace）。エージェント名（claude）は冗長なので非表示
 # 2行目: 実行中のツール操作（.claude/hooks/herdr-activity.sh が報告、アイドル時は idle）
 # 3行目: コンテキスト使用率 + compact 回数（statusline.sh が報告、compact は 1 回以上で表示）
 [ui.sidebar.agents]
-rows = [["state_icon", "workspace", "agent"], ["$activity"], ["$ctx", "$compacts"]]
+rows = [["state_icon", "workspace"], ["$activity"], ["$ctx", "$compacts"]]
+
+# サイドバー Spaces 行。workspace 名の代わりに、.zshrc の precmd フックが
+# 報告する $path（ホームからの相対パス。例: ~/repos/personal）を表示する
+[ui.sidebar.spaces]
+rows = [["state_icon", "$path"], ["branch", "git_status"]]
 
 [experimental]
 # prefix モード中だけ入力ソースを ASCII レイアウトに一時切替し、
