@@ -4,6 +4,7 @@ brew "colima"     # ローカル docker ランタイム（VM。docker CLI とセ
 brew "defaultbrowser"
 brew "direnv"
 brew "docker"     # Docker CLI（デーモンは colima）
+brew "duckdb"      # 分析用 SQL エンジン（duckdb -ui でノートブック UI）
 brew "duti"        # macOS のファイル関連付け管理
 brew "fd"          # find の代替（高速・.gitignore 尊重）
 brew "fzf"
