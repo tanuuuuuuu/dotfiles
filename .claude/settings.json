@@ -71,33 +71,20 @@
           },
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/herdr-activity.sh",
-            "timeout": 10,
+            "command": "python3 ~/.claude/hooks/herdr-summary.py",
+            "timeout": 60,
             "async": true
           }
         ]
       }
     ],
-    "PreToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ~/.claude/hooks/herdr-activity.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "Stop": [
+    "UserPromptSubmit": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/herdr-activity.sh",
-            "timeout": 10,
+            "command": "python3 ~/.claude/hooks/herdr-summary.py",
+            "timeout": 60,
             "async": true
           }
         ]

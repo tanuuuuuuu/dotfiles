@@ -139,7 +139,7 @@ ln -sfn "$DOTFILES_DIR/.claude/scripts" ~/.claude/scripts
 
 # hooks はファイル単位でリンク（herdr 管理の herdr-agent-state.sh と共存させるため）
 mkdir -p ~/.claude/hooks
-ln -sf "$DOTFILES_DIR/.claude/hooks/herdr-activity.sh" ~/.claude/hooks/herdr-activity.sh
+ln -sf "$DOTFILES_DIR/.claude/hooks/herdr-summary.py" ~/.claude/hooks/herdr-summary.py
 
 # skillsはディレクトリ全体をシンボリックリンク
 if [ -d ~/.claude/skills ] && [ ! -L ~/.claude/skills ]; then
