@@ -6,7 +6,7 @@
 
 - UserPromptSubmit: 発言のたびに要約を更新する
 - SessionStart: 再開（--resume 等）したセッションに、発言を待たず要約を出す。
-  新規セッションは会話ログが空なので何もしない
+  新規セッションは会話ログが空なので、仮の文言（PLACEHOLDER）を出す
 
 settings.json では async: true で登録する（要約に数秒かかるため、
 プロンプト送信を待たせない）。標準出力には何も出さない
@@ -27,6 +27,8 @@ MAX_CELLS = 36
 # 要約の材料にするユーザー発言の数と、1発言あたりの文字数上限
 RECENT_PROMPTS = 8
 PROMPT_CHARS = 200
+# まだ発言が無いセッションに出す文言（2行目が消えて行の高さが変わるのを防ぐ）
+PLACEHOLDER = "新規セッション"
 # 自分が起動した claude からの再帰呼び出しを止める目印
 GUARD_ENV = "HERDR_SUMMARY_HOOK"
 
@@ -36,6 +38,8 @@ SYSTEM_PROMPT = (
     f"日本語で全角{MAX_CELLS // 2 - 5}〜{MAX_CELLS // 2 - 1}文字の体言止め1行で出力する。"
     "「設定」「対応」のような抽象語だけで終わらせず、具体的な作業内容を入れる。"
     "一時的なやり取り（確認・相づち・操作の報告）は主題に含めない。"
+    "固有名詞（社名・サービス名・人名・識別子）は入力に書かれた表記をそのまま使う。"
+    "ローマ字やかなを漢字に直すなど、表記を推測で変えてはならない。"
     f"全角{MAX_CELLS // 2}文字を超えてはならない。"
     "[前回の見出し] がある場合、主題が変わっていなければ一字一句そのまま出力し、"
     "主題が変わったか作業が大きく進んだときだけ作り直す。"
@@ -44,8 +48,9 @@ SYSTEM_PROMPT = (
 
 # 要約が上限を超えたときの言い直し用（LLM は文字数を正確に数えられないため）
 SHORTEN_PROMPT = (
-    "入力された見出しは長すぎる。意味を保ったまま、"
-    f"日本語で全角{MAX_CELLS // 2 - 2}文字以内の体言止め1行に短縮して出力する。"
+    "入力の1行目は長すぎる見出し、2行目は削るべき最低文字数。"
+    "意味と固有名詞の表記を保ったまま、助詞や重要度の低い語を落として、"
+    "指定された文字数以上を削った体言止め1行を出力する。"
     "見出し本文だけを出力し、引用符・句点・説明・前置きは付けない。"
 )
 
@@ -81,8 +86,21 @@ def previous_summary(pane_id):
         summary = json.loads(result.stdout)["result"]["pane"]["tokens"].get("summary", "")
     except (OSError, subprocess.SubprocessError, ValueError, KeyError, TypeError):
         return ""
-    # 切り詰められた見出しは引き継がない（「…」付きのまま維持されてしまうため）
-    return "" if summary.endswith("…") else summary
+    # 仮の文言と、切り詰められた見出しは引き継がない（そのまま維持されてしまうため）
+    return "" if summary == PLACEHOLDER or summary.endswith("…") else summary
+
+
+def report(pane_id, summary):
+    """herdr のペインに $summary トークンとして報告する。"""
+    subprocess.run(
+        [
+            "herdr", "pane", "report-metadata", pane_id,
+            "--source", "claude-summary-hook",
+            "--token", f"summary={truncate(summary, MAX_CELLS)}",
+        ],
+        capture_output=True,
+        timeout=10,
+    )
 
 
 def past_prompts(transcript_path):
@@ -184,24 +202,22 @@ def main():
     if current and (not prompts or prompts[-1] != current):
         prompts.append(current)
     if not prompts:
+        report(pane_id, PLACEHOLDER)  # 新規セッション（/clear 直後も含む）
         return
 
     summary = summarize(build_input(prompts, previous_summary(pane_id)))
     if not summary:
         return  # 失敗時は報告しない（直前の表示を維持）
-    if cell_width(summary) > MAX_CELLS:
-        # 上限超えは1回だけ言い直させる。それでも超えたら下の truncate が切る
-        summary = summarize(summary, SHORTEN_PROMPT) or summary
+    # 上限超えは、超過分を伝えて最大2回まで言い直させる。それでも超えたら下の truncate が切る
+    for _ in range(2):
+        over_cells = cell_width(summary) - MAX_CELLS
+        if over_cells <= 0:
+            break
+        # 全角1文字 = 2列。端数切り上げ + 余裕1文字
+        cut_chars = (over_cells + 1) // 2 + 1
+        summary = summarize(f"{summary}\n全角{cut_chars}文字以上削る", SHORTEN_PROMPT) or summary
 
-    subprocess.run(
-        [
-            "herdr", "pane", "report-metadata", pane_id,
-            "--source", "claude-summary-hook",
-            "--token", f"summary={truncate(summary, MAX_CELLS)}",
-        ],
-        capture_output=True,
-        timeout=10,
-    )
+    report(pane_id, summary)
 
 
 if __name__ == "__main__":

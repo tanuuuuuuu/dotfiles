@@ -64,7 +64,7 @@ description = "shift pane right"
 # サイドバー agent エントリの表示行（0.7.4+）
 # 1行目: 状態アイコン + リポジトリ（workspace）。エージェント名（claude）は冗長なので非表示
 # 2行目: セッション内容の要約（.claude/hooks/herdr-summary.py が Haiku で生成して報告）。
-#        発言を送るたびに更新される。新規セッションは最初の発言まで値が無く、行ごと非表示になる
+#        発言を送るたびに更新される。新規セッションは最初の発言まで「新規セッション」と表示する
 [ui.sidebar.agents]
 rows = [["state_icon", "workspace"], ["$summary"]]
 
