@@ -21,7 +21,8 @@ import sys
 import unicodedata
 
 # サイドバー1行に収める表示幅の上限（半角=1、全角=2 で数える）。
-# config.toml の sidebar_width を変えたらここも合わせる
+# 行頭の字下げ等で数列使われるので、config.toml の sidebar_width（42）より 6 小さくしている。
+# sidebar_width を変えたらここも合わせる
 MAX_CELLS = 36
 # 要約の材料にするユーザー発言の数と、1発言あたりの文字数上限
 RECENT_PROMPTS = 8
@@ -32,12 +33,19 @@ GUARD_ENV = "HERDR_SUMMARY_HOOK"
 SYSTEM_PROMPT = (
     "あなたはコーディングエージェントのセッション一覧に表示する見出しを作る。"
     "入力はユーザーの発言の抜粋。セッション全体の主題（何を対象に何をしているか）を、"
-    f"日本語で全角{MAX_CELLS // 2 - 4}〜{MAX_CELLS // 2}文字の体言止め1行で出力する。"
+    f"日本語で全角{MAX_CELLS // 2 - 5}〜{MAX_CELLS // 2 - 1}文字の体言止め1行で出力する。"
     "「設定」「対応」のような抽象語だけで終わらせず、具体的な作業内容を入れる。"
     "一時的なやり取り（確認・相づち・操作の報告）は主題に含めない。"
     f"全角{MAX_CELLS // 2}文字を超えてはならない。"
     "[前回の見出し] がある場合、主題が変わっていなければ一字一句そのまま出力し、"
     "主題が変わったか作業が大きく進んだときだけ作り直す。"
+    "見出し本文だけを出力し、引用符・句点・説明・前置きは付けない。"
+)
+
+# 要約が上限を超えたときの言い直し用（LLM は文字数を正確に数えられないため）
+SHORTEN_PROMPT = (
+    "入力された見出しは長すぎる。意味を保ったまま、"
+    f"日本語で全角{MAX_CELLS // 2 - 2}文字以内の体言止め1行に短縮して出力する。"
     "見出し本文だけを出力し、引用符・句点・説明・前置きは付けない。"
 )
 
@@ -70,9 +78,11 @@ def previous_summary(pane_id):
             text=True,
             timeout=10,
         )
-        return json.loads(result.stdout)["result"]["pane"]["tokens"].get("summary", "")
+        summary = json.loads(result.stdout)["result"]["pane"]["tokens"].get("summary", "")
     except (OSError, subprocess.SubprocessError, ValueError, KeyError, TypeError):
         return ""
+    # 切り詰められた見出しは引き継がない（「…」付きのまま維持されてしまうため）
+    return "" if summary.endswith("…") else summary
 
 
 def past_prompts(transcript_path):
@@ -123,7 +133,7 @@ def build_input(prompts, previous=""):
     return "\n".join(parts)
 
 
-def summarize(text):
+def summarize(text, system_prompt=SYSTEM_PROMPT):
     """Haiku に要約させる。失敗したら空文字を返す。"""
     # herdr の環境変数を外す: 子の claude が herdr のフックや statusline 経由で
     # このペインの状態表示を書き換えないようにするため
@@ -134,7 +144,7 @@ def summarize(text):
             [
                 "claude", "-p",
                 "--model", "haiku",
-                "--system-prompt", SYSTEM_PROMPT,
+                "--system-prompt", system_prompt,
                 "--tools", "",                # ツール不要
                 "--strict-mcp-config",        # MCP サーバーを読み込まない
                 "--setting-sources", "",      # ユーザー設定（フック・CLAUDE.md）を読まない
@@ -179,6 +189,9 @@ def main():
     summary = summarize(build_input(prompts, previous_summary(pane_id)))
     if not summary:
         return  # 失敗時は報告しない（直前の表示を維持）
+    if cell_width(summary) > MAX_CELLS:
+        # 上限超えは1回だけ言い直させる。それでも超えたら下の truncate が切る
+        summary = summarize(summary, SHORTEN_PROMPT) or summary
 
     subprocess.run(
         [

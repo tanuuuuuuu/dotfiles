@@ -87,5 +87,5 @@ agent_panel_sort = "spaces"
 # サイドバー幅（列数）。Agents 2行目のセッション要約が切れないよう広げる。
 # デフォルトは幅 26 / 上限 36。手動ドラッグした幅はクライアント側に保存されて
 # こちらより優先される（境界のダブルクリックでこの値に戻る）
-sidebar_width = 40
+sidebar_width = 42
 sidebar_max_width = 48
